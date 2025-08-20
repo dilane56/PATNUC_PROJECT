@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_atp_request_user,access_atp_request_user,model_atp_request,base.group_user,1,1,1,0
+access_atp_document_user,access_atp_document_user,model_atp_document,base.group_user,1,1,1,0
+access_atp_document_type_manager,access_atp_document_type_manager,model_atp_document_type,base.group_system,1,1,1,1

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Action -->
+    <record id="action_atp_requests" model="ir.actions.act_window">
+        <field name="name">Demandes ATP</field>
+        <field name="res_model">atp.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créez votre première demande de certification d'appareil phytosanitaire.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem id="menu_atp_root" name="Certification ATP" sequence="10"/>
+    <menuitem id="menu_atp_requests" name="Demandes" parent="menu_atp_root" action="action_atp_requests" sequence="10"/>
+
+    <!-- Tree -->
+    <record id="view_atp_request_tree" model="ir.ui.view">
+        <field name="name">atp.request.tree</field>
+        <field name="model">atp.request</field>
+        <field name="arch" type="xml">
+            <tree string="Demandes ATP">
+                <field name="name"/>
+                <field name="applicant_name"/>
+                <field name="applicant_company"/>
+                <field name="device_name"/>
+                <field name="device_type"/>
+                <field name="state"/>
+                <field name="submit_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form -->
+    <record id="view_atp_request_form" model="ir.ui.view">
+        <field name="name">atp.request.form</field>
+        <field name="model">atp.request</field>
+        <field name="arch" type="xml">
+            <form string="Demande de certification ATP">
+                <header>
+                    <button name="action_submit" type="object" string="Soumettre" invisible="state != 'draft'" class="btn-primary"/>
+                    <button name="action_admin_check" type="object" string="Passer à Vérif. Admin" invisible="state != 'submitted'"/>
+                    <button name="action_lab_tests" type="object" string="Passer aux Tests Labo" invisible="state != 'admin_check'"/>
+                    <button name="action_field_tests" type="object" string="Passer aux Tests Champ" invisible="state != 'lab_tests'"/>
+                    <button name="action_synthesis" type="object" string="Synthèse" invisible="state != 'field_tests'"/>
+                    <button name="action_decision" type="object" string="Décision" invisible="state != 'synthesis'"/>
+                    <button name="action_minister_sign" type="object" string="Signature Ministre" invisible="state != 'decision'"/>
+                    <button name="action_certify" type="object" string="Émettre Certificat" invisible="state != 'minister_sign'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,submitted,admin_check,lab_tests,field_tests,synthesis,decision,minister_sign,certified,rejected"/>
+                </header>
+
+                <sheet>
+                    <group>
+                        <group string="Référence &amp; Statut">
+                            <field name="name" readonly="1"/>
+                            <field name="state" readonly="1"/>
+                            <field name="submit_date" readonly="1"/>
+                        </group>
+                        <group string="Demandeur">
+                            <field name="applicant_name"/>
+                            <field name="applicant_email"/>
+                            <field name="applicant_phone"/>
+                            <field name="applicant_company"/>
+                            <field name="applicant_cni"/>
+                            <field name="cni_front" filename="applicant_cni"/>
+                            <field name="cni_back" filename="applicant_cni"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Appareil">
+                            <group>
+                                <field name="device_name"/>
+                                <field name="brand"/>
+                                <field name="model"/>
+                                <field name="device_type"/>
+                                <field name="energy_source"/>
+                            </group>
+                            <group>
+                                <field name="capacity"/>
+                                <field name="max_pressure"/>
+                                <field name="flow_rate"/>
+                                <field name="manufacture_date"/>
+                            </group>
+                        </page>
+
+                        <page string="Documents (Art. 18)">
+                            <field name="document_ids" context="{'default_request_id': active_id}">
+                                <tree editable="bottom">
+                                    <field name="type_id"/>
+                                    <field name="file" filename="filename"/>
+                                    <field name="filename"/>
+                                    <field name="provided" readonly="1"/>
+                                    <field name="note"/>
+                                </tree>
+                            </field>
+                            <field name="required_missing_count" string="Documents requis manquants" readonly="1"/>
+                        </page>
+
+                        <page string="Planning &amp; Frais">
+                            <group>
+                                <field name="planned_end_date"/>
+                                <field name="end_date"/>
+                            </group>
+                            <group>
+                                <field name="fees_amount"/>
+                                <field name="fee_receipt"/>
+                            </group>
+                        </page>
+
+                        <page string="Certificat / Décision">
+                            <group>
+                                <field name="certificate_number"/>
+                                <field name="certificate_start"/>
+                                <field name="rejection_reason" invisible="state != 'rejected'"/>
+                            </group>
+                        </page>
+
+                        <page string="Chatter">
+                            <field name="message_ids" widget="mail_thread"/>
+                            <field name="activity_ids" widget="mail_activity"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Article 18 (a) -->
+    <record id="atp_doc_demande_timbrée" model="atp.document.type">
+        <field name="name">Demande timbrée</field>
+        <field name="code">DEMANDE_TIMBREE</field>
+        <field name="required">True</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- Article 18 (b) - Manuel d’utilisation -->
+    <record id="atp_doc_manuel_utilisation" model="atp.document.type">
+        <field name="name">Manuel d’utilisation</field>
+        <field name="code">MANUEL_UTILISATION</field>
+        <field name="required">True</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <!-- Article 18 (c) - Rapports tests de spécifications techniques -->
+    <record id="atp_doc_rapports_specs" model="atp.document.type">
+        <field name="name">Rapports tests spécifications techniques</field>
+        <field name="code">RAPPORTS_SPECS</field>
+        <field name="required">True</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <!-- Article 18 (d) - Rapport tests performance en champ -->
+    <record id="atp_doc_rapport_performance_champ" model="atp.document.type">
+        <field name="name">Rapport tests performance en champ</field>
+        <field name="code">RAPPORT_PERFORMANCE_CHAMP</field>
+        <field name="required">True</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <!-- Article 18 (e) - Engagement SAV & pièces détachées -->
+    <record id="atp_doc_engagement_sav" model="atp.document.type">
+        <field name="name">Engagement SAV &amp; pièces détachées</field>
+        <field name="code">ENGAGEMENT_SAV</field>
+        <field name="required">True</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <!-- Article 18 (f) - Échantillon ou rapport tests conjoints -->
+    <record id="atp_doc_echantillon_ou_rapport_conjoint" model="atp.document.type">
+        <field name="name">Échantillon ou rapport de tests conjoints</field>
+        <field name="code">ECHANTILLON_OU_TESTS_CONJOINTS</field>
+        <field name="required">True</field>
+        <field name="sequence">60</field>
+    </record>
+</odoo>

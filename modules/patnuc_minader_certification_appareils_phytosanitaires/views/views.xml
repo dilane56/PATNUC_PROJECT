@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="patnuc_minader_certification_appareils_phytosanitaires.list">
+      <field name="name">patnuc_minader_certification_appareils_phytosanitaires list</field>
+      <field name="model">patnuc_minader_certification_appareils_phytosanitaires.patnuc_minader_certification_appareils_phytosanitaires</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="patnuc_minader_certification_appareils_phytosanitaires.action_window">
+      <field name="name">patnuc_minader_certification_appareils_phytosanitaires window</field>
+      <field name="res_model">patnuc_minader_certification_appareils_phytosanitaires.patnuc_minader_certification_appareils_phytosanitaires</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="patnuc_minader_certification_appareils_phytosanitaires.action_server">
+      <field name="name">patnuc_minader_certification_appareils_phytosanitaires server</field>
+      <field name="model_id" ref="model_patnuc_minader_certification_appareils_phytosanitaires_patnuc_minader_certification_appareils_phytosanitaires"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="patnuc_minader_certification_appareils_phytosanitaires" id="patnuc_minader_certification_appareils_phytosanitaires.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="patnuc_minader_certification_appareils_phytosanitaires.menu_1" parent="patnuc_minader_certification_appareils_phytosanitaires.menu_root"/>
+    <menuitem name="Menu 2" id="patnuc_minader_certification_appareils_phytosanitaires.menu_2" parent="patnuc_minader_certification_appareils_phytosanitaires.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="patnuc_minader_certification_appareils_phytosanitaires.menu_1_list" parent="patnuc_minader_certification_appareils_phytosanitaires.menu_1"
+              action="patnuc_minader_certification_appareils_phytosanitaires.action_window"/>
+    <menuitem name="Server to list" id="patnuc_minader_certification_appareils_phytosanitaires" parent="patnuc_minader_certification_appareils_phytosanitaires.menu_2"
+              action="patnuc_minader_certification_appareils_phytosanitaires.action_server"/>
+-->
+  </data>
+</odoo>
