@@ -13,5 +13,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/certification_request_views.xml',
+        'views/appareil_views.xml'
+
     ],
 }

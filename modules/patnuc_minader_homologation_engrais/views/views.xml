@@ -2,9 +2,9 @@
   <data>
     <!-- explicit list view definition -->
 <!--
-    <record model="ir.ui.view" id="minader_procédure.list">
-      <field name="name">minader_procédure list</field>
-      <field name="model">minader_procédure.minader_procédure</field>
+    <record model="ir.ui.view" id="patnuc_minader_homologation_engrais.list">
+      <field name="name">patnuc_minader_homologation_engrais list</field>
+      <field name="model">patnuc_minader_homologation_engrais.patnuc_minader_homologation_engrais</field>
       <field name="arch" type="xml">
         <tree>
           <field name="name"/>
@@ -17,18 +17,18 @@
 
     <!-- actions opening views on models -->
 <!--
-    <record model="ir.actions.act_window" id="minader_procédure.action_window">
-      <field name="name">minader_procédure window</field>
-      <field name="res_model">minader_procédure.minader_procédure</field>
+    <record model="ir.actions.act_window" id="patnuc_minader_homologation_engrais.action_window">
+      <field name="name">patnuc_minader_homologation_engrais window</field>
+      <field name="res_model">patnuc_minader_homologation_engrais.patnuc_minader_homologation_engrais</field>
       <field name="view_mode">tree,form</field>
     </record>
 -->
 
     <!-- server action to the one above -->
 <!--
-    <record model="ir.actions.server" id="minader_procédure.action_server">
-      <field name="name">minader_procédure server</field>
-      <field name="model_id" ref="model_minader_procédure_minader_procédure"/>
+    <record model="ir.actions.server" id="patnuc_minader_homologation_engrais.action_server">
+      <field name="name">patnuc_minader_homologation_engrais server</field>
+      <field name="model_id" ref="model_patnuc_minader_homologation_engrais_patnuc_minader_homologation_engrais"/>
       <field name="state">code</field>
       <field name="code">
         action = {
@@ -42,19 +42,19 @@
 
     <!-- Top menu item -->
 <!--
-    <menuitem name="minader_procédure" id="minader_procédure.menu_root"/>
+    <menuitem name="patnuc_minader_homologation_engrais" id="patnuc_minader_homologation_engrais.menu_root"/>
 -->
     <!-- menu categories -->
 <!--
-    <menuitem name="Menu 1" id="minader_procédure.menu_1" parent="minader_procédure.menu_root"/>
-    <menuitem name="Menu 2" id="minader_procédure.menu_2" parent="minader_procédure.menu_root"/>
+    <menuitem name="Menu 1" id="patnuc_minader_homologation_engrais.menu_1" parent="patnuc_minader_homologation_engrais.menu_root"/>
+    <menuitem name="Menu 2" id="patnuc_minader_homologation_engrais.menu_2" parent="patnuc_minader_homologation_engrais.menu_root"/>
 -->
     <!-- actions -->
 <!--
-    <menuitem name="List" id="minader_procédure.menu_1_list" parent="minader_procédure.menu_1"
-              action="minader_procédure.action_window"/>
-    <menuitem name="Server to list" id="minader_procédure" parent="minader_procédure.menu_2"
-              action="minader_procédure.action_server"/>
+    <menuitem name="List" id="patnuc_minader_homologation_engrais.menu_1_list" parent="patnuc_minader_homologation_engrais.menu_1"
+              action="patnuc_minader_homologation_engrais.action_window"/>
+    <menuitem name="Server to list" id="patnuc_minader_homologation_engrais" parent="patnuc_minader_homologation_engrais.menu_2"
+              action="patnuc_minader_homologation_engrais.action_server"/>
 -->
   </data>
 </odoo>

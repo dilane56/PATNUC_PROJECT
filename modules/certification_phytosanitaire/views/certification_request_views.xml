@@ -1,31 +1,38 @@
 <odoo>
     <data>
-        <record id ="certification_request_form_view" model="ir.ui.view">
-            <field name = "name">certification.request.form</field>
-            <field name = "model">certification.request</field>
-            <field name = "arch" type="xml">
+        <record id="certification_request_form_view" model="ir.ui.view">
+            <field name="name">certification.request.form</field>
+            <field name="model">certification.request</field>
+            <field name="arch" type="xml">
                 <form string="Demande de Certification Phytosanitaire">
                     <header>
                         <button name="action_submit" type="object" string="Soumettre" invisible="state != 'draft'" class="oe_highlight"/>
-                        <button name="action_review" type="object" string="Mettre en revue" invisible="state != 'submitted'" class="oe_highlight"/>
-                        <button name="action_certify" type="object" string="Certifier" invisible="state != 'in_review'" class="oe_highlight"/>
-                        <button name="action_reject" type="object" string="Rejeter" invisible="state != 'in_review'"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted,in_review,certified"/>
+                        <button name="action_admin_check" type="object" string="Vérification administrative" invisible="state != 'submitted'" class="oe_highlight"/>
+                        <button name="action_lab_tests" type="object" string="Tests de spécifications" invisible="state != 'admin_check'" class="oe_highlight"/>
+                        <button name="action_field_tests" type="object" string="Tests de performance" invisible="state != 'lab_tests'" class="oe_highlight"/>
+                        <button name="action_synthesis" type="object" string="Synthèse" invisible="state != 'field_tests'" class="oe_highlight"/>
+                        <button name="action_decision" type="object" string="Décision de la Commission" invisible="state != 'synthesis'" class="oe_highlight"/>
+                        <button name="action_minister_sign" type="object" string="Signature du Ministre" invisible="state != 'decision'" class="oe_highlight"/>
+                        <button name="action_certify" type="object" string="Certificat émis" invisible="state != 'minister_sign'" class="oe_highlight"/>
+                        <button name="action_reject" type="object" string="Rejeter" invisible="state in ('certified', 'rejected','draft','submitted')"/>
+
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted,admin_check,lab_tests,field_tests,synthesis,decision,minister_sign,certified"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
                             <h1>
-                                <field name="name" readonly="1"/>
+                                <field name="name" readonly="id != False"/>
                             </h1>
                         </div>
                         <group>
                             <group>
                                 <field name="demandeur_id"/>
-                                <field name="date_demande"/>
+                                <field name="date_demande" />
+                                <field name="appareil_id"/>
                             </group>
                             <group>
-                                <field name="appareil_marque"/>
-                                <field name="appareil_type"/>
+                                <field name="appareil_marque" readonly="1"/>
+                                <field name="appareil_type" readonly="1"/>
                             </group>
                         </group>
 
@@ -38,25 +45,30 @@
                                     <field name="rapports_tests_champ"/>
                                     <field name="engagement_apres_vente"/>
                                     <field name="demande_timbree"/>
-                                    <field name="photocopie_carte_identite"/>
+                                     <field name="cni_avant"/>
+                                    <field name="cni_arriere"/>
                                 </group>
                             </page>
                         </notebook>
-
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
                 </form>
             </field>
         </record>
 
         <record id="certification_request_tree_view" model="ir.ui.view">
-            <field name="name">certification.phytosanitaire.tree</field>
+            <field name="name">certification.request.tree</field>
             <field name="model">certification.request</field>
             <field name="arch" type="xml">
                 <tree string="Demandes de Certification">
                     <field name="name"/>
                     <field name="demandeur_id"/>
                     <field name="date_demande"/>
-                    <field name="state" widget="badge" decoration-success="state == 'certified'" decoration-info="state == 'submitted'" decoration-warning="state == 'in_review'"/>
+                    <field name="state" widget="badge" decoration-success="state == 'certified'" decoration-info="state == 'submitted'" decoration-warning="state == 'admin_check'"/>
                 </tree>
             </field>
         </record>

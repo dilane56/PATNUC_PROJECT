@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_certification_phytosanitaire_user,Certification Phytosanitaire User,model_certification_request,base.group_user,1,1,1,1
+access_certification_request_user,Certification Request User,model_certification_request,base.group_user,1,1,1,1
+access_certification_appareil_user,Certification Appareil User,model_certification_appareil,base.group_user,1,1,1,1

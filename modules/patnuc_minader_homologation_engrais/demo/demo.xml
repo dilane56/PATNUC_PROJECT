@@ -1,94 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
-        <!-- Données de démonstration -->
-        
-        <!-- Demandeur de démonstration -->
-        <record id="demo_applicant_1" model="homologation.applicant">
-            <field name="name">Jean Dupont</field>
-            <field name="applicant_type">manufacturer</field>
-            <field name="identification_number">123456789</field>
-            <field name="nationality">Cameroun</field>
-            <field name="email">jean.dupont@example.com</field>
-            <field name="company_name">FertilCam SARL</field>
-        </record>
+    <data>
+<!--
+          <record id="object0" model="patnuc_minader_homologation_engrais.patnuc_minader_homologation_engrais">
+            <field name="name">Object 0</field>
+            <field name="value">0</field>
+          </record>
 
-        <!-- Entreprise de démonstration -->
-        <record id="demo_company_1" model="homologation.company">
-            <field name="name">FertilCam SARL</field>
-            <field name="code">FERTIL001</field>
-            <field name="company_type">manufacturer</field>
-            <field name="legal_form">SARL</field>
-            <field name="registration_number">RC/YDE/2023/B/1234</field>
-            <field name="tax_id">M0923456789</field>
-            <field name="country_id" ref="base.cm"/>
-            <field name="address">456 Avenue Kennedy, Yaoundé, Cameroun</field>
-            <field name="city">Yaoundé</field>
-            <field name="phone">+237 2 22 34 56 78</field>
-            <field name="email">contact@fertilcam.cm</field>
-            <field name="website">www.fertilcam.cm</field>
-            <field name="contact_person">Jean Dupont</field>
-            <field name="contact_phone">+237 6 12 34 56 78</field>
-            <field name="contact_email">jean.dupont@fertilcam.cm</field>
-        </record>
+          <record id="object1" model="patnuc_minader_homologation_engrais.patnuc_minader_homologation_engrais">
+            <field name="name">Object 1</field>
+            <field name="value">10</field>
+          </record>
 
-        <!-- Produit de démonstration -->
-        <record id="demo_product_1" model="homologation.product">
-            <field name="name">NPK 15-15-15 Premium</field>
-            <field name="code">NPK001</field>
-            <field name="company_id" ref="demo_company_1"/>
-            <field name="composition">Azote (N): 15%, Phosphore (P2O5): 15%, Potassium (K2O): 15%, Oligo-éléments: Bore, Zinc, Cuivre, Fer</field>
-        </record>
+          <record id="object2" model="patnuc_minader_homologation_engrais.patnuc_minader_homologation_engrais">
+            <field name="name">Object 2</field>
+            <field name="value">20</field>
+          </record>
 
-        <!-- Laboratoire de démonstration -->
-        <record id="demo_laboratory_1" model="homologation.laboratory">
-            <field name="name">Laboratoire National d'Analyses Agricoles</field>
-            <field name="code">LNAA001</field>
-            <field name="address">789 Boulevard de l'Agriculture, Yaoundé, Cameroun</field>
-            <field name="contact_person">Dr. Marie Nguemo</field>
-            <field name="contact_email">contact@lnaa.cm</field>
-        </record>
+          <record id="object3" model="patnuc_minader_homologation_engrais.patnuc_minader_homologation_engrais">
+            <field name="name">Object 3</field>
+            <field name="value">30</field>
+          </record>
 
-        <!-- Dossier d'homologation de démonstration -->
-        <record id="demo_homologation_1" model="homologation.request">
-            <field name="name">HOM/2024/00001</field>
-            <field name="applicant_id" ref="demo_applicant_1"/>
-            <field name="company_id" ref="demo_company_1"/>
-            <field name="product_id" ref="demo_product_1"/>
-            <field name="application_type">new</field>
-            <field name="stage_id" ref="patnuc_minader_homologation_engrais.stage_submitted"/>
-            <field name="submission_date">2024-01-15</field>
-            <field name="fees_paid">True</field>
-            <field name="samples_deposited">True</field>
-        </record>
-
-        <!-- Documents de démonstration -->
-        <record id="demo_document_1" model="homologation.document">
-            <field name="name">Demande d'homologation timbrée</field>
-            <field name="document_type_id" ref="patnuc_minader_homologation_engrais.document_type_stamped_request"/>
-            <field name="description">Demande officielle d'homologation du produit NPK 15-15-15 Premium</field>
-            <field name="request_id" ref="demo_homologation_1"/>
-        </record>
-
-        <record id="demo_document_2" model="homologation.document">
-            <field name="name">Justificatif de paiement des frais</field>
-            <field name="document_type_id" ref="patnuc_minader_homologation_engrais.document_type_payment_proof"/>
-            <field name="description">Reçu de paiement des frais d'évaluation de 150 000 FCFA</field>
-            <field name="request_id" ref="demo_homologation_1"/>
-        </record>
-
-        <record id="demo_document_3" model="homologation.document">
-            <field name="name">Dossier technique du produit</field>
-            <field name="document_type_id" ref="patnuc_minader_homologation_engrais.document_type_technical_dossier"/>
-            <field name="description">Dossier technique complet du produit NPK 15-15-15 Premium</field>
-            <field name="request_id" ref="demo_homologation_1"/>
-        </record>
-
-        <record id="demo_document_4" model="homologation.document">
-            <field name="name">Récépissé de dépôt d'échantillons</field>
-            <field name="document_type_id" ref="patnuc_minader_homologation_engrais.document_type_sample_receipt"/>
-            <field name="description">Récépissé confirmant le dépôt de 5 kg d'échantillons</field>
-            <field name="request_id" ref="demo_homologation_1"/>
-        </record>
+          <record id="object4" model="patnuc_minader_homologation_engrais.patnuc_minader_homologation_engrais">
+            <field name="name">Object 4</field>
+            <field name="value">40</field>
+          </record>
+-->
     </data>
 </odoo>

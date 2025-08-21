@@ -15,7 +15,7 @@ services:
     container_name: patnuc_erp
 
     #command: odoo -u base
-    #command: odoo scaffold minader_homologation_engrais /mnt/extra-addons/
+    #command: odoo scaffold patnuc_minader_homologation_engrais /mnt/extra-addons/
 
     
     networks:

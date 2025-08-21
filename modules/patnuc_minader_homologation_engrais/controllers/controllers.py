@@ -2,21 +2,21 @@
 # from odoo import http
 
 
-# class MinaderProcédure(http.Controller):
-#     @http.route('/minader_procédure/minader_procédure', auth='public')
+# class PatnucMinaderHomologationEngrais(http.Controller):
+#     @http.route('/patnuc_minader_homologation_engrais/patnuc_minader_homologation_engrais', auth='public')
 #     def index(self, **kw):
 #         return "Hello, world"
 
-#     @http.route('/minader_procédure/minader_procédure/objects', auth='public')
+#     @http.route('/patnuc_minader_homologation_engrais/patnuc_minader_homologation_engrais/objects', auth='public')
 #     def list(self, **kw):
-#         return http.request.render('minader_procédure.listing', {
-#             'root': '/minader_procédure/minader_procédure',
-#             'objects': http.request.env['minader_procédure.minader_procédure'].search([]),
+#         return http.request.render('patnuc_minader_homologation_engrais.listing', {
+#             'root': '/patnuc_minader_homologation_engrais/patnuc_minader_homologation_engrais',
+#             'objects': http.request.env['patnuc_minader_homologation_engrais.patnuc_minader_homologation_engrais'].search([]),
 #         })
 
-#     @http.route('/minader_procédure/minader_procédure/objects/<model("minader_procédure.minader_procédure"):obj>', auth='public')
+#     @http.route('/patnuc_minader_homologation_engrais/patnuc_minader_homologation_engrais/objects/<model("patnuc_minader_homologation_engrais.patnuc_minader_homologation_engrais"):obj>', auth='public')
 #     def object(self, obj, **kw):
-#         return http.request.render('minader_procédure.object', {
+#         return http.request.render('patnuc_minader_homologation_engrais.object', {
 #             'object': obj
 #         })
 
