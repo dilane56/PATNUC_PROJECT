@@ -1,0 +1,152 @@
+/* image d'arrière plan */
+
+position: absolute;
+width: 1787px;
+height: 1128px;
+left: -30px;
+top: 0px;
+
+background: url(industrial-port-container-yard.jpg);
+filter: blur(2.5px);
+
+
+/* dégradé */
+
+position: absolute;
+width: 1728px;
+height: 1117px;
+left: 0px;
+top: 0px;
+
+background: linear-gradient(180deg, rgba(31, 156, 91, 0.8) 0%, rgba(29, 146, 85, 0.8) 6.5%, rgba(25, 125, 73, 0.8) 13.05%, rgba(21, 106, 62, 0.8) 19.18%, rgba(19, 94, 55, 0.8) 25.17%, rgba(0, 0, 0, 0.8) 100%);
+mix-blend-mode: darken;
+
+
+/* Copyright  */
+
+position: absolute;
+width: 163px;
+left: calc(50% - 163px/2 + 739.5px);
+top: 95.34%;
+bottom: 3.04%;
+
+font-family: 'Cabin';
+font-style: normal;
+font-weight: 400;
+font-size: 15px;
+line-height: 18px;
+
+color: #FFFFFF;
+
+
+/* Formulaire */
+
+position: absolute;
+width: 498px;
+height: 568px;
+left: calc(50% - 498px/2);
+top: calc(50% - 568px/2 + 0.5px);
+
+
+/* Logo  */
+
+position: absolute;
+width: 78px;
+height: 79px;
+left: calc(50% - 78px/2);
+top: 327px;
+
+background: url(DOUANA.png);
+
+
+/* Connexion */
+
+position: absolute;
+width: 140px;
+left: calc(50% - 140px/2);
+top: 38.29%;
+bottom: 58.49%;
+
+font-family: 'Cabin';
+font-style: normal;
+font-weight: 700;
+font-size: 30px;
+line-height: 36px;
+
+color: #011627;
+
+
+/* Champ nom d'utilisateur */
+
+position: absolute;
+width: 369.58px;
+height: 56.97px;
+left: 679px;
+top: 501px;
+
+
+/* Champ mot de passe */
+
+position: absolute;
+width: 369.58px;
+height: 56.97px;
+left: 679px;
+top: 569.84px;
+
+
+/* Bouton */
+/* Auto layout */
+
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 10px 89px 10px 88px;
+gap: 10px;
+
+position: absolute;
+width: 370px;
+height: 52px;
+left: calc(50% - 370px/2);
+top: 657px;
+
+background: #0C356A;
+border-radius: 4px;
+
+
+
+/* J’ai oublié mon mot de passe */
+
+position: absolute;
+width: 120px;
+height: 12px;
+left: calc(50% - 120px/2);
+top: 724px;
+
+font-family: 'Cabin';
+font-style: normal;
+font-weight: 400;
+font-size: 10px;
+line-height: 12px;
+text-align: center;
+
+color: #0174BE;
+
+
+/* Version */
+
+position: absolute;
+width: 75px;
+left: calc(50% - 75px/2 + 0.5px);
+top: 70.43%;
+bottom: 28.14%;
+
+font-family: 'Cabin';
+font-style: normal;
+font-weight: 400;
+font-size: 13px;
+line-height: 16px;
+/* identical to box height */
+
+
+color: rgba(1, 22, 39, 0.37);

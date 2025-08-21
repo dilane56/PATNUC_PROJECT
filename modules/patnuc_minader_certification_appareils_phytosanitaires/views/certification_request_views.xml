@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+      <!-- Vue formulaire des demandes de certification -->
+      <record id="view_certification_request_form" model="ir.ui.view">
+          <field name="name">phytosanitary.certification.request.form</field>
+          <field name="model">phytosanitary.certification.request</field>
+          <field name="arch" type="xml">
+              <form string="Demande de Certification">
+                  <header>
+                      <button name="action_submit"
+                              string="Soumettre"
+                              type="object"
+                              class="btn-primary"
+                              invisible="state != 'draft'" />
+                      <button name="action_admin_check" type="object" string="Vérification Admin" invisible="state != 'submitted'" class="btn-primary" groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_agent"/>
+                      <button name="action_technical_review" type="object" string="Instruction Technique" invisible="state != 'admin_check'" class="btn-primary" groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_agent"/>
+                      <button name="action_technical_evaluation" type="object" string="Évaluation Technique" invisible="state != 'technical_review'" class="btn-primary" groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_agent"/>
+                      <button name="action_technical_report" type="object" string="Rapport Technique" invisible="state != 'technical_eval'" class="btn-primary" groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_agent"/>
+                      <button name="action_final_decision" type="object" string="Décision Finale" invisible="state != 'technical_report'" class="btn-primary" groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_validator"/>
+                      <button name="action_sign_certificate" type="object" string="Signer Certificat" invisible="state != 'final_decision'" class="btn-primary" groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_manager"/>
+                      <button name="action_notify_decision" type="object" string="Notifier Décision" invisible="state != 'certificate_signed'" class="btn-primary" groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_agent"/>
+                      <button name="action_reject" type="object" string="Rejeter" invisible="state not in ('submitted','admin_check','technical_review','technical_eval','technical_report','final_decision')"
+                            class="btn-secondary" groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_agent"/>
+                      <field name="state" widget="statusbar" statusbar_visible="draft,submitted,admin_check,technical_review,technical_eval,technical_report,final_decision,certificate_signed,notified"/>
+                  </header>
+                  <sheet>
+                      <div class="oe_button_box" name="button_box">
+                          <button class="oe_stat_button" type="object" name="action_view_documents" icon="fa-files-o">
+                              <field string="Documents" name="document_ids" widget="statinfo"/>
+                          </button>
+                      </div>
+                      <div class="oe_title">
+                          <h1>
+                              <field name="name" readonly="1"/>
+                          </h1>
+                      </div>
+                      <group>
+                          <group name="main_info">
+                              <field name="partner_id" options="{'no_create': True, 'no_edit': True}"/>
+                              <field name="equipment_id" options="{'no_create': True}"/>
+                              <field name="equipment_type"/>
+                              <field name="submission_date" readonly="1"/>
+                              <field name="expected_completion_date" readonly="1"/>
+                          </group>
+                          <group name="status_info">
+                              <field name="responsible_agent_id"/>
+                              <field name="dripa_validator_id"/>
+                              <field name="minister_signer_id"/>
+                              <field name="required_documents_complete" readonly="1"/>
+                              <field name="fees_paid"/>
+                              <field name="fees_amount"/>
+                          </group>
+                      </group>
+                      <notebook>
+                          <page string="Documents" name="documents">
+                              <field name="document_ids" context="{'default_request_id': active_id}">
+                                  <tree editable="bottom">
+                                      <field name="document_type"/>
+                                      <field name="name"/>
+                                      <field name="file_data" filename="file_name"/>
+                                      <field name="file_name" invisible="1"/>
+                                      <field name="is_required" readonly="1"/>
+                                      <field name="is_provided" readonly="1"/>
+                                      <field name="is_valid"/>
+                                      <field name="upload_date" readonly="1"/>
+                                  </tree>
+                              </field>
+                          </page>
+                          <page string="Évaluations" name="evaluations">
+                              <group>
+                                  <group string="Évaluation Administrative">
+                                      <field name="admin_evaluation_id" readonly="1"/>
+                                  </group>
+                                  <group string="Évaluation Technique">
+                                      <field name="technical_evaluation_id" readonly="1"/>
+                                  </group>
+                              </group>
+                          </page>
+                          <page string="Certificat" name="certificate" invisible = "state != ['certificate_signed', 'notified']">
+                              <group>
+                                  <group>
+                                      <field name="certificate_number" readonly="1"/>
+                                      <field name="certificate_validity_start" readonly="1"/>
+                                      <field name="certificate_validity_end" readonly="1"/>
+                                  </group>
+                                  <group>
+                                      <field name="actual_completion_date" readonly="1"/>
+                                  </group>
+                              </group>
+                          </page>
+                          <page string="Rejet" name="rejection" invisible = "state != 'rejected'">
+                              <field name="rejection_reason" readonly="1"/>
+                          </page>
+                      </notebook>
+                  </sheet>
+                  <div class="oe_chatter">
+                      <field name="message_follower_ids"/>
+                      <field name="activity_ids"/>
+                      <field name="message_ids"/>
+                  </div>
+              </form>
+          </field>
+      </record>
+
+      <record id="certification_request_view_tree" model="ir.ui.view">
+        <field name="name">phytosanitary.certification.request.view.tree</field>
+        <field name="model">phytosanitary.certification.request</field>
+        <field name="arch" type="xml">
+            <tree string="">
+                <field name="partner_id" />
+                <field name="equipment_id"/>
+                <field name="responsible_agent_id"/>
+                <field name="dripa_validator_id"/>
+                <field name="minister_signer_id"/>
+            </tree>
+        </field>
+      </record>
+
+      <record id="action_certification_request" model="ir.actions.act_window">
+        <field name="name">Demande de Certification</field>
+        <field name="res_model">phytosanitary.certification.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Enregistrez vos informations ici !
+            </p>
+        </field>
+      </record>
+    
+  </data>
+</odoo>
+        

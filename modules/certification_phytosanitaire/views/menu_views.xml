@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record id="certification_request_action" model="ir.actions.act_window">
+            <field name="name">Demande de Certification Phytosanitaire</field>
+            <field name="res_model">certification.request</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_certification_root" name="Certification Phytosanitaire" sequence="10"/>
+        <menuitem id="menu_certification_requests" name="Demandes de Certification" parent="menu_certification_root" action="certification_request_action" sequence="20"/>
+
+    </data>
+</odoo>
+

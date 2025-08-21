@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vue formulaire wizard de rejet -->
+        <record id="view_rejection_wizard_form" model="ir.ui.view">
+            <field name="name">phytosanitary.rejection.wizard.form</field>
+            <field name="model">phytosanitary.rejection.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Rejet de la Demande">
+                    <group>
+                        <field name="request_id" readonly="1"/>
+                        <field name="rejection_reason" placeholder="Précisez les motifs du rejet..." required="1"/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm_rejection" type="object" string="Confirmer le Rejet" class="btn-primary"/>
+                        <button string="Annuler" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

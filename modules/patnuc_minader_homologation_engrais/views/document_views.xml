@@ -1,0 +1,32 @@
+<!-- Nouveau fichier sans préfixe fertilizer -->
+<odoo>
+    <record id="view_document_tree" model="ir.ui.view">
+        <field name="name">document.tree</field>
+        <field name="model">document</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="document_type"/>
+                <field name="filename"/>
+                <field name="file_size"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_document_form" model="ir.ui.view">
+        <field name="name">document.form</field>
+        <field name="model">document</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="document_type"/>
+                        <field name="filename"/>
+                        <field name="file_size"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

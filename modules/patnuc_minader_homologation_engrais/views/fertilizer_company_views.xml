@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vue formulaire pour les entreprises -->
+        <record id="view_homologation_company_form" model="ir.ui.view">
+            <field name="name">homologation.company.form</field>
+            <field name="model">homologation.company</field>
+            <field name="arch" type="xml">
+                <form string="Entreprise">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="company_type"/>
+                                <field name="legal_form"/>
+                            </group>
+                            <group>
+                                <field name="contact_person"/>
+                                <field name="contact_email"/>
+                                <field name="contact_phone"/>
+                                <field name="phone"/>
+                                <field name="email"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="address"/>
+                                <field name="city"/>
+                                <field name="country_id"/>
+                            </group>
+                            <group>
+                                <field name="registration_number"/>
+                                <field name="tax_id"/>
+                                <field name="website"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vue liste pour les entreprises -->
+        <record id="view_homologation_company_tree" model="ir.ui.view">
+            <field name="name">homologation.company.tree</field>
+            <field name="model">homologation.company</field>
+            <field name="arch" type="xml">
+                <tree string="Entreprises">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="company_type"/>
+                    <field name="contact_person"/>
+                    <field name="contact_email"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action pour les entreprises -->
+        <record id="action_homologation_company" model="ir.actions.act_window">
+            <field name="name">Entreprises</field>
+            <field name="res_model">homologation.company</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>
+
+

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vue formulaire évaluation technique -->
+        <record id="view_technical_evaluation_form" model="ir.ui.view">
+            <field name="name">phytosanitary.technical.evaluation.form</field>
+            <field name="model">phytosanitary.technical.evaluation</field>
+            <field name="arch" type="xml">
+                <form string="Évaluation Technique">
+                    <header>
+                        <button name="action_set_in_progress" type="object" string="Commencer" invisible="state != 'draft'" class="btn-primary"/>
+                        <button name="action_set_done" type="object" string="Valider" invisible="state != 'in_progress'" class="btn-success"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <span>Évaluation Technique - </span>
+                                <field name="equipment_id" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="request_id" readonly="1"/>
+                                <field name="evaluator_id"/>
+                                <field name="evaluation_date"/>
+                            </group>
+                            <group>
+                                <field name="overall_score" readonly="1"/>
+                                <field name="recommendation"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Scores d'Évaluation" name="scores">
+                                <group>
+                                    <group string="Scores par Critère">
+                                        <field name="functionality_score"/>
+                                        <field name="safety_score"/>
+                                        <field name="compliance_score"/>
+                                    </group>
+                                </group>
+                                <group string="Commentaires Détaillés">
+                                    <field name="functionality_comments" placeholder="Commentaires sur la fonctionnalité..."/>
+                                    <field name="safety_comments" placeholder="Commentaires sur la sécurité..."/>
+                                    <field name="compliance_comments" placeholder="Commentaires sur la conformité..."/>
+                                </group>
+                            </page>
+                            <page string="Tests Terrain" name="field_tests">
+                                <group>
+                                    <group>
+                                        <field name="field_test_performed"/>
+                                        <field name="field_test_date" invisible="field_test_performed == False" />
+                                    </group>
+                                </group>
+                                <group>
+                                    <field name="field_test_results" placeholder="Résultats des tests terrain..." 
+                                           invisible="field_test_performed == False" />
+                                </group>
+                            </page>
+                            <page string="Recommandation" name="recommendation">
+                                <group>
+                                    <field name="conditions" placeholder="Conditions à respecter (si applicable)..." 
+                                          invisible="recommendation == False" />
+                                </group>
+                            </page>
+                            <page string="Rapport Technique" name="technical_report">
+                                <group>
+                                    <field name="technical_report" placeholder="Rapport technique détaillé..."/>
+                                    <field name="technical_report_file" filename="technical_report_filename"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vue liste évaluations techniques -->
+        <record id="view_technical_evaluation_tree" model="ir.ui.view">
+            <field name="name">phytosanitary.technical.evaluation.tree</field>
+            <field name="model">phytosanitary.technical.evaluation</field>
+            <field name="arch" type="xml">
+                <tree string="Évaluations Techniques">
+                    <field name="request_id"/>
+                    <field name="equipment_id"/>
+                    <field name="evaluator_id"/>
+                    <field name="evaluation_date"/>
+                    <field name="overall_score"/>
+                    <field name="recommendation" decoration-success="recommendation=='favorable'" 
+                           decoration-warning="recommendation=='conditional'" 
+                           decoration-danger="recommendation=='unfavorable'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vue formulaire évaluation administrative -->
+        <record id="view_admin_evaluation_form" model="ir.ui.view">
+            <field name="name">phytosanitary.admin.evaluation.form</field>
+            <field name="model">phytosanitary.admin.evaluation</field>
+            <field name="arch" type="xml">
+                <form string="Évaluation Administrative">
+                    <header>
+                        <button name="action_set_in_progress" type="object" string="Commencer" invisible="state != 'draft'" class="btn-primary"/>
+                        <button name="action_set_done" type="object" string="Valider" invisible="state != 'in_progress'" class="btn-success"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <span>Évaluation Administrative - </span>
+                                <field name="request_id" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="evaluator_id"/>
+                                <field name="evaluation_date"/>
+                            </group>
+                            <group>
+                                <field name="is_compliant"/>
+                            </group>
+                        </group>
+                        <group string="Vérifications">
+                            <group>
+                                <field name="documents_complete"/>
+                                <field name="documents_valid"/>
+                                <field name="fees_verified"/>
+                            </group>
+                        </group>
+                        <group string="Non-Conformités" invisible="is_compliant == True">
+                            <field name="non_compliance_reasons" placeholder="Détaillez les motifs de non-conformité..."/>
+                        </group>
+                        <group string="Actions Requises">
+                            <field name="additional_documents_needed" placeholder="Documents supplémentaires requis..."/>
+                            <field name="corrections_needed" placeholder="Corrections nécessaires..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Actions -->
+        <record id="action_technical_evaluation" model="ir.actions.act_window">
+            <field name="name">Évaluations Techniques</field>
+            <field name="res_model">phytosanitary.technical.evaluation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Enregistrez vos informations ici !
+                </p>
+            </field>
+        </record>
+
+        <record id="action_admin_evaluation" model="ir.actions.act_window">
+            <field name="name">Évaluations Administratives</field>
+            <field name="res_model">phytosanitary.admin.evaluation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Enregistrez vos informations ici !
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

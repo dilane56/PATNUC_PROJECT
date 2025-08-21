@@ -1,0 +1,81 @@
+<odoo>
+    <data>
+        <record id ="certification_request_form_view" model="ir.ui.view">
+            <field name = "name">certification.request.form</field>
+            <field name = "model">certification.request</field>
+            <field name = "arch" type="xml">
+                <form string="Demande de Certification Phytosanitaire">
+                    <header>
+                        <button name="action_submit" type="object" string="Soumettre" invisible="state != 'draft'" class="oe_highlight"/>
+                        <button name="action_review" type="object" string="Mettre en revue" invisible="state != 'submitted'" class="oe_highlight"/>
+                        <button name="action_certify" type="object" string="Certifier" invisible="state != 'in_review'" class="oe_highlight"/>
+                        <button name="action_reject" type="object" string="Rejeter" invisible="state != 'in_review'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted,in_review,certified"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="demandeur_id"/>
+                                <field name="date_demande"/>
+                            </group>
+                            <group>
+                                <field name="appareil_marque"/>
+                                <field name="appareil_type"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Dossier de Demande">
+                                <group>
+                                    <field name="caracteristiques_techniques"/>
+                                    <field name="manuel_utilisation"/>
+                                    <field name="rapports_tests_techniques"/>
+                                    <field name="rapports_tests_champ"/>
+                                    <field name="engagement_apres_vente"/>
+                                    <field name="demande_timbree"/>
+                                    <field name="photocopie_carte_identite"/>
+                                </group>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="certification_request_tree_view" model="ir.ui.view">
+            <field name="name">certification.phytosanitaire.tree</field>
+            <field name="model">certification.request</field>
+            <field name="arch" type="xml">
+                <tree string="Demandes de Certification">
+                    <field name="name"/>
+                    <field name="demandeur_id"/>
+                    <field name="date_demande"/>
+                    <field name="state" widget="badge" decoration-success="state == 'certified'" decoration-info="state == 'submitted'" decoration-warning="state == 'in_review'"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="seq_certification_phytosanitaire" model="ir.sequence">
+            <field name="name">Demande de Certification</field>
+            <field name="code">certification.phytosanitaire</field>
+            <field name="prefix">CERT-%(year)s-</field>
+            <field name="padding">4</field>
+        </record>
+
+        <record id="certification_request_action" model="ir.actions.act_window">
+            <field name="name">Demandes de Certification</field>
+            <field name="res_model">certification.request</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_certification_root" name="Certification Phytosanitaire" sequence="10"/>
+        <menuitem id="menu_certification_requests" name="Demandes de Certification" parent="menu_certification_root" action="certification_request_action" sequence="10"/>
+
+    </data>
+</odoo>
