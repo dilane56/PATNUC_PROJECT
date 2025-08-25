@@ -49,8 +49,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_appareil_root" name="Appareils" parent="menu_certification_root" sequence="20"/>
-        <menuitem id="menu_appareil_list" name="Liste des Appareils" parent="menu_appareil_root" action="certification_appareil_action" sequence="10"/>
+        <menuitem id="menu_appareil_root" name="Appareils" parent="menu_certification_root" sequence="20" action="certification_appareil_action" />
 
     </data>
 </odoo>

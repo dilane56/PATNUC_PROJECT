@@ -1,0 +1,78 @@
+<!-- homologation_engrais/views/homologation_demande_views.xml -->
+<odoo>
+    <record id="view_homologation_request_form" model="ir.ui.view">
+        <field name="name">homologation.demande.form</field>
+        <field name="model">homologation.request</field>
+        <field name="arch" type="xml">
+            <form string="Demande d'Homologation">
+                <header>
+                    <button name="action_submit" type="object" string="Soumettre" invisible="state != 'draft'" class="oe_highlight" />
+                    <button name="action_admin_check" type="object" string="Vérification administrative" invisible="state != 'submitted'" class="oe_highlight"/>
+                    <button name="action_conformity_control" type="object" string="Contrôle de conformité" invisible="state != 'admin_check'" class="oe_highlight"/>
+                    <button name="action_quality_control" type="object" string="Contrôle de qualité" invisible="state != 'conformity_control'" class="oe_highlight"/>
+                    <button name="action_agronomic_tests" type="object" string="Tests agronomiques" invisible="state != 'quality_control'" class="oe_highlight"/>
+                    <button name="action_evaluation" type="object" string="Evaluation" invisible="state != 'agronomic_tests'" class="oe_highlight"/>
+                    <button name="action_final_validation" type="object" string="Validation finale" invisible="state != 'evaluation'" class="oe_highlight"/>
+                    <button name="action_reject" type="object" string="Rejeter" invisible="state in ('rejected','draft')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,admin_check,conformity_control,quality_control,agronomic_tests,evaluation,final_validation"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="demandeur_id"/>
+                            <field name="date_demande"/>
+                        </group>
+                        <group>
+                            <field name="produit_id"/>
+                            <field name="motif_rejet" invisible="state != 'rejected'"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Documents Requis">
+                            <group>
+                                <group>
+                                    <field name="notice_utilisation"/>
+                                    <field name="demande_timbree"/>
+                                    <field name="dossier_technique"/>
+                                </group>
+                                <group>
+                                    <field name="justificatif_frais"/>
+                                    <field name="cni_avant"/>
+                                    <field name="cni_arriere"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_homologation_request_tree" model="ir.ui.view">
+        <field name="name">homologation.request.tree</field>
+        <field name="model">homologation.request</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="demandeur_id"/>
+                <field name="produit_id"/>
+                <field name="date_demande"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_homologation_request" model="ir.actions.act_window">
+        <field name="name">Demandes</field>
+        <field name="res_model">homologation.request</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="menu_homologation_root" name="Homologation Engrais" sequence="10"/>
+    <menuitem id="menu_homologation_requests" name="Demande d'homologtion" parent="menu_homologation_root" action="action_homologation_request" sequence="20"/>
+</odoo>

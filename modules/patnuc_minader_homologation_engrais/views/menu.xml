@@ -1,0 +1,12 @@
+<!-- homologation_engrais/views/homologation_menu.xml -->
+<odoo>
+    <data>
+        <record model="ir.actions.act_window" id="action_homologation_request">
+            <field name="name">Demande d'homologation Engrais ou fertilisant</field>
+            <field name="res_model">homologation.request</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+    <menuitem id="menu_homologation_root" name="Homologation Engrais " sequence="10" action="action_homologation_request"/>
+    <menuitem id="menu_homologation_requests" name="Demandes d'homologation" parent="menu_homologation_root" action="action_homologation_request" sequence="20"/>
+</odoo>

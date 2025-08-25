@@ -1,0 +1,46 @@
+<!-- homologation_engrais/views/homologation_produit_views.xml -->
+<odoo>
+    <record id="view_homologation_produit_form" model="ir.ui.view">
+        <field name="name">homologation.produit.form</field>
+        <field name="model">homologation.produit</field>
+        <field name="arch" type="xml">
+            <form string="Produit Engrais/Fertilisant">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="type_produit"/>
+                        <field name="poids_net"/>
+                        <field name="fabricant"/>
+                        <field name="specificites_qualite"/>
+                        <field name="toxicite"/>
+                        <field name="risques"/>
+                        <field name="principe_actif"/>
+                        <field name="notice_utilisation"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_homologation_produit_tree" model="ir.ui.view">
+        <field name="name">homologation.produit.tree</field>
+        <field name="model">homologation.produit</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="type_produit"/>
+                <field name="poids_net"/>
+                <field name="fabricant"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_homologation_produits" model="ir.actions.act_window">
+        <field name="name">Produits</field>
+        <field name="res_model">homologation.produit</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_produit_root" name="Engrais/Fertilisant" parent="menu_homologation_root" sequence="20" action="action_homologation_produits"/>
+
+</odoo>
