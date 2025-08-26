@@ -12,8 +12,8 @@
     'auto_install': False,
     'data': [
         'security/ir.model.access.csv',
-        'views/certification_request_views.xml',
-        'views/appareil_views.xml'
-
+        'views/reject_wizard_views.xml',
+        'views/appareil_views.xml',
+        'views/certification_request_views.xml'
     ],
 }

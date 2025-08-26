@@ -14,7 +14,8 @@
                         <button name="action_decision" type="object" string="Décision de la Commission" invisible="state != 'synthesis'" class="oe_highlight"/>
                         <button name="action_minister_sign" type="object" string="Signature du Ministre" invisible="state != 'decision'" class="oe_highlight"/>
                         <button name="action_certify" type="object" string="Certificat émis" invisible="state != 'minister_sign'" class="oe_highlight"/>
-                        <button name="action_reject" type="object" string="Rejeter" invisible="state in ('certified', 'rejected','draft','submitted')"/>
+
+                        <button name="%(action_rejet_wizard)d" type="action" string="Rejeter" invisible="state in ('certified', 'rejected','draft','submitted')"/>
 
                         <field name="state" widget="statusbar" statusbar_visible="draft,submitted,admin_check,lab_tests,field_tests,synthesis,decision,minister_sign,certified"/>
                     </header>
@@ -27,7 +28,7 @@
                         <group>
                             <group>
                                 <field name="demandeur_id"/>
-                                <field name="date_demande" />
+                                <field name="date_demande" readonly="1"/>
                                 <field name="appareil_id"/>
                             </group>
                             <group>

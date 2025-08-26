@@ -22,13 +22,16 @@ class CertificationRequest(models.Model):
 
     #documents
     caracteristiques_techniques = fields.Binary(string='fiche techniques', required=True)
-    manuel_utilisation = fields.Binary(string='Manuel d\'utilisation', attachment=True)
+    manuel_utilisation = fields.Binary(string='Manuel d\'utilisation', attachment=True, required=True)
     rapports_tests_techniques = fields.Binary(string='Rapports de test techniques', attachment=True)
     rapports_tests_champ = fields.Binary(string='Rapports de tests sur le terrain', attachment=True)
     engagement_apres_vente = fields.Binary(string='Engagement de service après-vente', required=True)
-    demande_timbree = fields.Binary(string='Demande timbrée', attachment=True)
-    cni_avant = fields.Binary(string="Scan CNI (recto)", attachment=True)
-    cni_arriere = fields.Binary(string="Scan CNI (verso)", attachment=True)
+    demande_timbree = fields.Binary(string='Demande timbrée', attachment=True, required=True)
+    cni_avant = fields.Binary(string="Scan CNI (recto)", attachment=True, required=True)
+    cni_arriere = fields.Binary(string="Scan CNI (verso)", attachment=True, required=True)
+
+    #Motif de rejet
+    rejection_reason = fields.Text(string='Motif de rejet')
 
 
     state = fields.Selection([

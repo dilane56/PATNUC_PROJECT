@@ -7,17 +7,17 @@ class Appareil(models.Model):
 
     name = fields.Char(string='Nom de l\'appareil', required=True)
     marque = fields.Char(string='Marque', required=True)
-    model = fields.Char(string="Modèle")
+    model = fields.Char(string="Modèle", required=True)
     energy_source = fields.Selection([
         ("manuelle", "Manuelle"),
         ("electrique", "Électrique"),
         ("essence", "Essence"),
         ("batterie", "Batterie"),
-    ], string="Source d'énergie")
-    capacity = fields.Float(string="Capacité nominale")
-    max_pressure = fields.Float(string="Pression maximale")
-    flow_rate = fields.Float(string="Débit")
-    manufacture_date = fields.Date(string="Date de fabrication")
+    ], string="Source d'énergie", required=True)
+    capacity = fields.Float(string="Capacité nominale", required=True)
+    max_pressure = fields.Float(string="Pression maximale", required=True)
+    flow_rate = fields.Float(string="Débit", required=True)
+    manufacture_date = fields.Date(string="Date de fabrication", required=True)
     type_appareil = fields.Selection([
         ('pulverisateurs_dos_pression_entretenue', 'Pulvérisateurs à dos à pression entretenue'),
         ('pulverisateurs_dos_moteur', 'Pulvérisateurs à dos à moteur'),
