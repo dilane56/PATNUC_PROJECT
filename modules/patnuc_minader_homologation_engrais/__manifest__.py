@@ -18,13 +18,14 @@ Long description of module's purpose
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base','mail'],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
         'views/menu.xml',
         'views/produit_views.xml',
+        'views/homologation_rejet_wizard_views.xml',
         'views/homologation_views.xml',
     ],
     # only loaded in demonstration mode

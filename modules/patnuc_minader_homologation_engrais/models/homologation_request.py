@@ -4,7 +4,8 @@ from odoo.exceptions import UserError
 
 class HomologationRequest(models.Model):
     _name = 'homologation.request'
-    _description = "Demande d’Homologation d’Engrais"
+    _description = "Demande d'Homologation d'Engrais"
+    _inherit = ['mail.thread']
 
     name = fields.Char("Référence", required=True, copy=False, default="Nouvelle")
     demandeur_id = fields.Many2one('res.partner', string="Demandeur", required=True, default=lambda self: self.env.user)
@@ -13,12 +14,15 @@ class HomologationRequest(models.Model):
     date_demande = fields.Date("Date de Soumission", default=fields.Date.today)
 
     # documents requis
-    notice_utilisation = fields.Binary(string='Notice d\'utilisation', attachment=True)
-    demande_timbree = fields.Binary(string='Demande timbrée', attachment=True)
-    dossier_technique = fields.Binary(string='Dossier technique', attachment=True)
-    justificatif_frais = fields.Binary(string='Justificatif des frais', attachment=True)
-    cni_avant = fields.Binary(string="Scan CNI (recto)", attachment=True)
-    cni_arriere = fields.Binary(string="Scan CNI (verso)", attachment=True)
+    notice_utilisation = fields.Binary(string='Notice d\'utilisation', attachment=True, required=True)
+    demande_timbree = fields.Binary(string='Demande timbrée', attachment=True, required=True)
+    dossier_technique = fields.Binary(string='Dossier technique', attachment=True, required=True)
+    justificatif_frais = fields.Binary(string='Justificatif des frais', attachment=True, required=True)
+    cni_avant = fields.Binary(string="Scan CNI (recto)", attachment=True, required=True)
+    cni_arriere = fields.Binary(string="Scan CNI (verso)", attachment=True, required=True)
+
+    #motif de rejet
+    rejection_reason = fields.Text(string='Motif de rejet')
 
     state = fields.Selection([
         ('draft', 'Brouillon'),
@@ -33,7 +37,7 @@ class HomologationRequest(models.Model):
         ('rejected', 'Rejetée'),
     ], string='Statut', default='draft')
 
-    motif_rejet = fields.Text("Motif du rejet")
+
 
     # Actions workflow
     @api.model
@@ -94,5 +98,4 @@ class HomologationRequest(models.Model):
             self.write({'state': next_state[self.state]})
         else:
             raise UserError("Impossible de valider depuis cet état.")
-
 

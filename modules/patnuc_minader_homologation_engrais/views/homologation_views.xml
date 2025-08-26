@@ -13,7 +13,8 @@
                     <button name="action_agronomic_tests" type="object" string="Tests agronomiques" invisible="state != 'quality_control'" class="oe_highlight"/>
                     <button name="action_evaluation" type="object" string="Evaluation" invisible="state != 'agronomic_tests'" class="oe_highlight"/>
                     <button name="action_final_validation" type="object" string="Validation finale" invisible="state != 'evaluation'" class="oe_highlight"/>
-                    <button name="action_reject" type="object" string="Rejeter" invisible="state in ('rejected','draft')"/>
+
+                    <button name="%(patnuc_minader_homologation_engrais.action_homologation_rejet_wizard)d" type="action" string="Rejeter" invisible="state in ('rejected','draft')"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submitted,admin_check,conformity_control,quality_control,agronomic_tests,evaluation,final_validation"/>
                 </header>
                 <sheet>
@@ -29,7 +30,7 @@
                         </group>
                         <group>
                             <field name="produit_id"/>
-                            <field name="motif_rejet" invisible="state != 'rejected'"/>
+                            <field name="rejection_reason" invisible="state != 'rejected'"/>
                         </group>
                     </group>
                     

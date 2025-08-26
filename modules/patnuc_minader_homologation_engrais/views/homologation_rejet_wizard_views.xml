@@ -1,0 +1,28 @@
+<odoo>
+    <data>
+        <record id="homologation_rejet_wizard_form_view" model="ir.ui.view">
+            <field name="name">homologation.rejet.wizard.form</field>
+            <field name="model">homologation.rejet.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Rejeter la demande">
+                    <sheet>
+                        <group>
+                            <field name="rejection_reason"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_rejeter_demande" string="Confirmer" type="object" class="oe_highlight"/>
+                        <button string="Annuler" class="btn btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_homologation_rejet_wizard" model="ir.actions.act_window">
+            <field name="name">Motif de rejet</field>
+            <field name="res_model">homologation.rejet.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>
