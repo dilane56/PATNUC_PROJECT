@@ -33,10 +33,24 @@ class CertificationRequest(models.Model):
     #Motif de rejet
     rejection_reason = fields.Text(string='Motif de rejet')
 
+    # Champs pour la vérification administrative
+    admin_verification_date = fields.Date(string="Date de vérification administrative", readonly=True)
+    admin_verification_agent_id = fields.Many2one('res.users', string="Agent vérificateur", readonly=True)
+
+    # Champs pour valider chaque document
+    caracteristiques_techniques_ok = fields.Boolean(string="Fiche techniques valide")
+    manuel_utilisation_ok = fields.Boolean(string="Manuel d'utilisation valide")
+    rapports_tests_techniques_ok = fields.Boolean(string="Rapports de test techniques valide")
+    demande_timbree_ok = fields.Boolean(string="Demande timbrée valide")
+    rapports_tests_champ_ok = fields.Boolean(string="Rapports de tests sur le terrain valide")
+    cni_avant_ok = fields.Boolean(string="CNI avant valide")
+    cni_arriere_ok = fields.Boolean(string="CNI arrière valide")
+    engagement_apres_vente_ok = fields.Boolean(string="Engagement après-vente valide")
+
+    admin_verification_comment = fields.Text(string="Commentaires de l'agent")
 
     state = fields.Selection([
         ('draft', 'Brouillon'),
-        ('submitted', 'Soumise'),
         ('admin_check', 'Vérification administrative'),
         ('lab_tests', 'Tests de spécifications (labo)'),
         ('field_tests', 'Tests de performance (champ)'),
@@ -57,18 +71,28 @@ class CertificationRequest(models.Model):
     def action_submit(self):
         """Passe la demande de l'état 'Brouillon' à 'Soumise' et envoie une notification."""
         for rec in self:
-            rec.state = 'submitted'
+            rec.state = 'admin_check'
             rec.message_post(body="La demande de certification a été soumise.")
 
-    def action_admin_check(self):
-        """Passe la demande à l'état 'Vérification administrative'."""
-        for rec in self:
-            rec.state = 'admin_check'
-            rec.message_post(body="La demande a été envoyée pour vérification administrative.")
-    def action_lab_tests(self):
-        for rec in self:
-            rec.state = 'lab_tests'
-            rec.message_post(body="Les tests de spécifications (labo) ont été effectués.")
+
+        # Mettez à jour les méthodes de workflow pour inclure ces champs
+
+    def action_admin_check_ok(self):
+        """Action pour valider la demande après vérification administrative."""
+        self.state = 'lab_tests'
+        self.admin_verification_date = fields.Date.today()
+        self.admin_verification_agent_id = self.env.user.id
+        self.message_post(
+            body="La vérification administrative est conforme. La demande passe à l'étape des tests de spécifications.")
+
+    def action_admin_check_rejected(self):
+        """Action pour rejeter la demande après vérification administrative."""
+        self.state = 'rejected'
+        self.admin_verification_date = fields.Date.today()
+        self.admin_verification_agent_id = self.env.user.id
+        self.message_post(body="La demande a été rejetée lors de la vérification administrative.")
+
+
 
 
     def action_field_tests(self):
@@ -98,6 +122,14 @@ class CertificationRequest(models.Model):
             rec.message_post(body="Le certificat a été émis.")
 
     def action_reject(self):
+        if self.state == 'admin_check':
+            self.admin_verification_date = fields.Date.today()
+            self.admin_verification_agent_id = self.env.user.id
+            self.state = 'rejected'
+            for rec in self:
+                rec.state = 'rejected'
+                rec.message_post(body="La demande a été rejetée lors de la vérification administrative.")
+
         for rec in self:
             rec.state = 'rejected'
             rec.message_post(body="La demande a été rejetée.")

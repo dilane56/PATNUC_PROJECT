@@ -7,7 +7,6 @@
             <form string="Demande d'Homologation">
                 <header>
                     <button name="action_submit" type="object" string="Soumettre" invisible="state != 'draft'" class="oe_highlight" />
-                    <button name="action_admin_check" type="object" string="Vérification administrative" invisible="state != 'submitted'" class="oe_highlight"/>
                     <button name="action_conformity_control" type="object" string="Contrôle de conformité" invisible="state != 'admin_check'" class="oe_highlight"/>
                     <button name="action_quality_control" type="object" string="Contrôle de qualité" invisible="state != 'conformity_control'" class="oe_highlight"/>
                     <button name="action_agronomic_tests" type="object" string="Tests agronomiques" invisible="state != 'quality_control'" class="oe_highlight"/>
@@ -15,7 +14,7 @@
                     <button name="action_final_validation" type="object" string="Validation finale" invisible="state != 'evaluation'" class="oe_highlight"/>
 
                     <button name="%(patnuc_minader_homologation_engrais.action_homologation_rejet_wizard)d" type="action" string="Rejeter" invisible="state in ('rejected','draft')"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,admin_check,conformity_control,quality_control,agronomic_tests,evaluation,final_validation"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,admin_check,conformity_control,quality_control,agronomic_tests,evaluation,final_validation"/>
                 </header>
                 <sheet>
                     <div class="oe_title">

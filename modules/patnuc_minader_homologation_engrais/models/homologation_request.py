@@ -24,9 +24,21 @@ class HomologationRequest(models.Model):
     #motif de rejet
     rejection_reason = fields.Text(string='Motif de rejet')
 
+    # champ pour la verification administrative
+    admin_verification_date = fields.Date(string='Date de vérification administrative')
+    admin_verification_agent_id = fields.Many2one('res.users', string='Agent de vérification administrative')
+    admin_verification_notes = fields.Text(string='Notes de vérification administrative')
+
+    # champs pour valider chaque document
+    notice_utilisation_valid = fields.Boolean(string='Notice d\'utilisation validée')
+    demande_timbree_valid = fields.Boolean(string='Demande timbrée validée')
+    dossier_technique_valid = fields.Boolean(string='Dossier technique validé')
+    justificatif_frais_valid = fields.Boolean(string='Justificatif des frais validé')
+    cni_avant_valid = fields.Boolean(string='Scan CNI (recto) validé')
+    cni_arriere_valid = fields.Boolean(string='Scan CNI (verso) validé')
+
     state = fields.Selection([
         ('draft', 'Brouillon'),
-        ('submitted', 'Soumise'),
         ('admin_check', 'Vérification administrative'),
         ('conformity_control', 'Contrôle de conformité'),
         ('quality_control', 'Contrôle de qualité'),
@@ -49,17 +61,19 @@ class HomologationRequest(models.Model):
     def action_submit(self):
         """Passe la demande de l'état 'Brouillon' à 'Soumise' et envoie une notification."""
         for rec in self:
-            rec.state = 'submitted'
-            rec.message_post(body="La demande de certification a été soumise.")
-
-    def action_admin_check(self):
-        """Passe la demande à l'état 'Vérification administrative'."""
-        for rec in self:
             rec.state = 'admin_check'
-            rec.message_post(body="La demande a été envoyée pour vérification administrative.")
+            rec.message_post(body="La demande a été soumise. Vérification administrative en attente.")
+
+
 
     def action_conformity_control(self):
-        pass
+        """Action pour valider la demande après vérification administrative."""
+        self.state = 'conformity_control'
+        self.admin_verification_date = fields.Date.today()
+        self.admin_verification_agent_id = self.env.user.id
+        self.message_post(
+            body="La vérification administrative est conforme. Contrôle de qualité en attente.")
+
 
     def action_quality_control(self):
         pass
@@ -84,7 +98,7 @@ class HomologationRequest(models.Model):
         for rec in self:
             rec.state = 'rejected'
             rec.message_post(body="La demande a été rejetée.")
-            self.write({'state': 'rejected', 'motif_rejet': motif})
+            self.write({'state': 'rejected', 'rejection_reason': motif})
 
 
     def action_valider(self):

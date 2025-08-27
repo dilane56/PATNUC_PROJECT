@@ -2,3 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_certification_request_user,Certification Request User,model_certification_request,base.group_user,1,1,1,1
 access_certification_appareil_user,Certification Appareil User,model_certification_appareil,base.group_user,1,1,1,1
 access_rejet_wizard_user,Rejet Wizard User,model_rejet_wizard,base.group_user,1,1,1,1
+access_certification_request_agent,access_certification_request_agent,model_certification_request,certification_phytosanitaire.group_agent_minader,1,0,1,0

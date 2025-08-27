@@ -7,37 +7,62 @@
                 <form string="Demande de Certification Phytosanitaire">
                     <header>
                         <button name="action_submit" type="object" string="Soumettre" invisible="state != 'draft'" class="oe_highlight"/>
-                        <button name="action_admin_check" type="object" string="Vérification administrative" invisible="state != 'submitted'" class="oe_highlight"/>
-                        <button name="action_lab_tests" type="object" string="Tests de spécifications" invisible="state != 'admin_check'" class="oe_highlight"/>
+                        <button name="action_admin_check_ok" type="object" string="Valider la vérification" invisible="state != 'admin_check'" class="oe_highlight" groups="certification_phytosanitaire.group_agent_minader" />
+
+
                         <button name="action_field_tests" type="object" string="Tests de performance" invisible="state != 'lab_tests'" class="oe_highlight"/>
                         <button name="action_synthesis" type="object" string="Synthèse" invisible="state != 'field_tests'" class="oe_highlight"/>
                         <button name="action_decision" type="object" string="Décision de la Commission" invisible="state != 'synthesis'" class="oe_highlight"/>
                         <button name="action_minister_sign" type="object" string="Signature du Ministre" invisible="state != 'decision'" class="oe_highlight"/>
                         <button name="action_certify" type="object" string="Certificat émis" invisible="state != 'minister_sign'" class="oe_highlight"/>
 
-                        <button name="%(action_rejet_wizard)d" type="action" string="Rejeter" invisible="state in ('certified', 'rejected','draft','submitted')"/>
+                        <button name="%(action_rejet_wizard)d" type="action" string="Rejeter" invisible="state in ('certified', 'rejected','draft')"/>
 
-                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted,admin_check,lab_tests,field_tests,synthesis,decision,minister_sign,certified"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,admin_check,lab_tests,field_tests,synthesis,decision,minister_sign,certified"/>
                     </header>
+
                     <sheet>
                         <div class="oe_title">
                             <h1>
                                 <field name="name" readonly="id != False"/>
                             </h1>
                         </div>
+
                         <group>
-                            <group>
+                            <group string="Information sur le demandeur">
                                 <field name="demandeur_id"/>
                                 <field name="date_demande" readonly="1"/>
-                                <field name="appareil_id"/>
+
                             </group>
-                            <group>
+                            <group string="Information sur l'appareil">
+                                  <field name="appareil_id"/>
                                 <field name="appareil_marque" readonly="1"/>
                                 <field name="appareil_type" readonly="1"/>
                             </group>
                         </group>
 
+
+
                         <notebook>
+                            <page string="Vérification administrative" invisible="state != 'admin_check'">
+                                <group>
+                                    <group>
+                                         <field name="caracteristiques_techniques_ok"/>
+                                    <field name="manuel_utilisation_ok"/>
+                                    <field name="rapports_tests_techniques_ok"/>
+                                    <field name="rapports_tests_champ_ok"/>
+                                    <field name="engagement_apres_vente_ok"/>
+                                    <field name="demande_timbree_ok"/>
+                                     <field name="cni_avant_ok"/>
+                                    <field name="cni_arriere_ok"/>
+                                    </group>
+                                    <group>
+                                        <field name="admin_verification_date" readonly="1"/>
+                                        <field name="admin_verification_agent_id" readonly="1"/>
+                                    </group>
+                                </group>
+                                <field name="admin_verification_comment" placeholder="Ajouter des commentaires sur la vérification..."/>
+                            </page>
                             <page string="Dossier de Demande">
                                 <group>
                                     <field name="caracteristiques_techniques"/>
@@ -69,7 +94,7 @@
                     <field name="name"/>
                     <field name="demandeur_id"/>
                     <field name="date_demande"/>
-                    <field name="state" widget="badge" decoration-success="state == 'certified'" decoration-info="state == 'submitted'" decoration-warning="state == 'admin_check'"/>
+                    <field name="state" widget="badge" decoration-success="state == 'certified' " decoration-warning="state == 'admin_check'"/>
                 </tree>
             </field>
         </record>

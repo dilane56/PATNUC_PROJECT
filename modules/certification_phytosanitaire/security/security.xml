@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Définition d'une nouvelle catégorie pour nos groupes -->
+    <record id="module_category_procedures_minader" model="ir.module.category">
+        <field name="name">Procédures MINADER</field>
+        <field name="description">Groupes liés aux procédures administratives du MINADER</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- Groupe Agent MINADER -->
+    <record id="group_agent_minader" model="res.groups">
+        <field name="name">Agent MINADER</field>
+        <field name="category_id" ref="module_category_procedures_minader"/>
+    </record>
+
+    <!-- Exemple : un autre groupe si besoin -->
+    <record id="group_responsable_minader" model="res.groups">
+        <field name="name">Responsable MINADER</field>
+        <field name="category_id" ref="module_category_procedures_minader"/>
+    </record>
+</odoo>
