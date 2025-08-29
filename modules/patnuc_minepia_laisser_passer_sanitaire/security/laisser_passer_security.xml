@@ -7,8 +7,8 @@
         <field name="sequence">10</field>
     </record>
       <!-- Groupe Agent du minepia -->
-    <record id="group_agent_service_veterinaire" model="res.groups">
-        <field name="name">Agent des Services Vétérinaires</field>
+    <record id="group_agent_service_veterinaire_lp" model="res.groups">
+        <field name="name">Agent des Services Vétérinaires LP</field>
         <field name="category_id" ref="module_category_procedures_minepia_lp"/>
     </record>
 </odoo>

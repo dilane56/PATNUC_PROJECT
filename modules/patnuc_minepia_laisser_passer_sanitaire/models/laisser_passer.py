@@ -25,6 +25,21 @@ class LaissezPasserSanitaire(models.Model):
 
     delai_imparti = fields.Integer(string='Délai de traitement (jours)', default=2, readonly=True)
 
+    # Champs pour la vérification administrative
+    administrative_check_date = fields.Date(string="Date de vérification administrative", readonly=True)
+    administrative_checker_id = fields.Many2one('res.users', string="Agent vérificateur", readonly=True)
+
+    # Champs de validation des documents
+    declaration_ok = fields.Boolean(string="Déclaration des animaux valide")
+    certificat_sanitaire_ok = fields.Boolean(string="Certificat sanitaire valide")
+    cni_ok = fields.Boolean(string="CNI valide")
+    recu_paiement_ok = fields.Boolean(string="Reçu de paiement valide")
+
+    administrative_check_comment = fields.Text(string="Commentaires de l'agent")
+    
+    # Champ calculé pour la validation
+    can_validate_admin = fields.Boolean(string="Peut valider", compute="_compute_can_validate_admin")
+
     #Motif de rejet
     rejection_reason = fields.Text(string='Motif de rejet')
 
@@ -36,6 +51,16 @@ class LaissezPasserSanitaire(models.Model):
         ('approved', 'Signature et delivrance'),
         ('rejected', 'Rejetée'),
     ], string='Statut', default='draft', tracking=True)
+
+    @api.depends('declaration_ok', 'cni_ok', 'recu_paiement_ok', 'certificat_sanitaire_ok','administrative_check_comment')
+    def _compute_can_validate_admin(self):
+        for record in self:
+            record.can_validate_admin = record._all_documents_validated()
+
+    def _all_documents_validated(self):
+        """Vérifie si tous les documents requis sont validés."""
+        required_fields = ['declaration_ok', 'cni_ok', 'recu_paiement_ok', 'certificat_sanitaire_ok','administrative_check_comment']
+        return all(getattr(self, field) for field in required_fields)
 
     @api.model
     def create(self, vals):
@@ -50,9 +75,16 @@ class LaissezPasserSanitaire(models.Model):
 
 
     def action_deeper_check(self):
-        """Action pour lancer la vérification approfondie."""
+        """Action pour valider la demande après vérification administrative."""
+        if not self._all_documents_validated():
+            from odoo.exceptions import ValidationError
+            raise ValidationError("Impossible de valider. Tous les documents doivent être vérifiés et approuvés.")
+        
+        self.ensure_one()
         self.state = 'deeper_check'
-        self.message_post(body="La demande est passée à l'étape de vérification approfondie.")
+        self.administrative_check_date = fields.Date.today()
+        self.administrative_checker_id = self.env.user.id
+        self.message_post(body="Vérification administrative effectuée et approuvée. La demande passe à l'étape de vérification approfondie.")
 
     def action_approve(self):
         """Action pour approuver et délivrer le laissez-passer."""

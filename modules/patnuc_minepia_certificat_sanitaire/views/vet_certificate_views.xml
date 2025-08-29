@@ -14,15 +14,14 @@
                 <form string="Certificat Sanitaire Vétérinaire">
                     <header>
                         <button name="action_submit" type="object" string="Soumettre" invisible="state != 'draft'" class="oe_highlight"/>
-                        <button name="action_technical_inspection" type="object" string="Valider la vérification et Lancer l'inspection sanitaire" invisible="state !='administrative_control'" groups="patnuc_minepia_certificat_sanitaire.group_agent_service_veterinaire" class="oe_highlight" readonly="[('can_validate_admin', '=', False)]"/>
-                        <button name="action_regulatory_approval" type="object" string="Lancer l'approbation" invisible="state != 'technical_inspection'" class="oe_highlight"/>
-                        <button name="action_approve" type="object" string="Approuver le certificat" invisible="state != 'regulatory_approval'" class="oe_highlight"/>
+                        <button name="action_technical_inspection" type="object" string="Valider la vérification et Lancer la verification approfondie" invisible="state !='administrative_control'" groups="patnuc_minepia_certificat_sanitaire.group_agent_service_veterinaire" class="oe_highlight" readonly="[('can_validate_admin', '=', False)]"/>
+                        <button name="action_approve" type="object" string="Approuver le certificat" invisible="state != 'deep_check'" class="oe_highlight"/>
                         <button name="%(action_vet_rejet_wizard)d"
                                     string="Rejeter"
                                     type="action"
                                     invisible="state in ('draft', 'rejected', '')" />
 
-                        <field name="state" widget="statusbar" statusbar_visible="draft,administrative_control,technical_inspection,regulatory_approval,approved"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,administrative_control,deep_check,approved"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -48,13 +47,13 @@
 
                                 </group>
                             </page>
-                            <page string="Verification administrative" invisible="state =='draft'" groups="patnuc_minepia_certificat_sanitaire.group_agent_service_veterinaire">
+                            <page string="Verification administrative" invisible="state =='draft'" groups="patnuc_minepia_certificat_sanitaire.group_agent_service_veterinaire"  >
                                 <group>
                                     <group>
-                                         <field name="declaration_ok"/>
-                                        <field name="certificat_sanitaire_ok"/>
-                                        <field name="cni_ok"/>
-                                        <field name="recu_paiement_ok"/>
+                                         <field name="declaration_ok" readonly="state !='administrative_control'"/>
+                                        <field name="certificat_sanitaire_ok" readonly="state !='administrative_control'"/>
+                                        <field name="cni_ok" readonly="state !='administrative_control'"/>
+                                        <field name="recu_paiement_ok" readonly="state !='administrative_control'"/>
                                     </group>
                                     <group>
                                         <field name="administrative_check_date" readonly="1"/>
@@ -62,7 +61,7 @@
                                     </group>
 
                                 </group>
-                                <field name="administrative_check_comment" placeholder="Ajouter des commentaires sur la vérification..."/>
+                                <field name="administrative_check_comment" placeholder="Ajouter des commentaires sur la vérification..." readonly="state !='administrative_control'"/>
 
                             </page>
                             <page string="Details du rejet" invisible="state != 'rejected'">

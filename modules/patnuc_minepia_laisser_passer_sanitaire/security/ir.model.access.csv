@@ -1,4 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_laissez_passer_user,Laissez-passer User,model_laissez_passer,base.group_user,1,1,1,1
-access_laissez_passer_agent,Laissez-passer Agent,model_laissez_passer,patnuc_minepia_laisser_passer_sanitaire.group_agent_service_veterinaire,1,1,1,1
+access_laissez_passer_agent,Laissez-passer Agent,model_laissez_passer,patnuc_minepia_laisser_passer_sanitaire.group_agent_service_veterinaire_lp,1,0,1,0
 access_laissez_passer_rejet_wizard_user,Laissez-passer Rejet Wizard User,model_laissez_passer_rejet_wizard,base.group_user,1,1,1,1

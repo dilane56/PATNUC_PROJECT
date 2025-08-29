@@ -47,13 +47,12 @@ class VeterinaryCertificate(models.Model):
     state = fields.Selection([
         ('draft', 'Brouillon'),
         ('administrative_control', 'Contrôle Administratif'),
-        ('technical_inspection', 'Inspection Sanitaire'),
-        ('regulatory_approval', 'Approbation Technique'),
+        ('deep_check', 'Verification Aprofondie'),
         ('approved', 'Approuvée'),
         ('rejected', 'Rejetée'),
     ], string='Statut', default='draft')
 
-    @api.depends('declaration_ok', 'cni_ok', 'recu_paiement_ok', 'certificat_sanitaire_ok', 'type_demande')
+    @api.depends('declaration_ok', 'cni_ok', 'recu_paiement_ok', 'certificat_sanitaire_ok', 'type_demande','administrative_check_comment')
     def _compute_can_validate_admin(self):
         for record in self:
             record.can_validate_admin = record._all_documents_validated()
@@ -71,7 +70,7 @@ class VeterinaryCertificate(models.Model):
 
     def _all_documents_validated(self):
         """Vérifie si tous les documents requis sont validés."""
-        required_fields = ['declaration_ok', 'cni_ok', 'recu_paiement_ok']
+        required_fields = ['declaration_ok', 'cni_ok', 'recu_paiement_ok','administrative_check_comment']
         if self.type_demande == 'animaux':
             required_fields.append('certificat_sanitaire_ok')
         
@@ -83,15 +82,12 @@ class VeterinaryCertificate(models.Model):
             from odoo.exceptions import ValidationError
             raise ValidationError("Impossible de valider. Tous les documents doivent être vérifiés et approuvés.")
         
-        self.state = 'technical_inspection'
+        self.state = 'deep_check'
         self.administrative_check_date = fields.Date.today()
         self.administrative_checker_id = self.env.user.id
         self.message_post(body="Vérification administrative effectuée et approuvée. La demande passe à l'inspection technique.")
 
-    def action_regulatory_approval(self):
-        """Action pour lancer l'approbation technique."""
-        self.state = 'regulatory_approval'
-        self.message_post(body="La demande est passée à l'étape d'approbation technique.")
+
 
     def action_approve(self):
         """Action pour approuver et délivrer le certificat."""
