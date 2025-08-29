@@ -1,0 +1,88 @@
+<odoo>
+    <data>
+        <record id="seq_laissez_passer" model="ir.sequence">
+            <field name="name">Laissez-passer Sanitaire</field>
+            <field name="code">laissez.passer</field>
+            <field name="prefix">LPS-%(year)s-</field>
+            <field name="padding">4</field>
+        </record>
+
+        <record id="laissez_passer_form_view" model="ir.ui.view">
+            <field name="name">laissez.passer.form</field>
+            <field name="model">laissez.passer</field>
+            <field name="arch" type="xml">
+                <form string="Laissez-passer Sanitaire">
+                    <header>
+                        <button name="action_submit" type="object" string="Soumettre" invisible="state != 'draft'"  class="oe_highlight"/>
+                        <button name="action_deeper_check" type="object" string="Lancer la vérification approfondie" invisible="state !='administrative_control'" class="oe_highlight"/>
+                        <button name="action_approve" type="object" string="Approuver le laissez-passer" invisible="state !='deeper_check'" class="oe_highlight"/>
+                        <button name="%(patnuc_minepia_laisser_passer_sanitaire.action_laissez_passer_rejet_wizard)d"
+                                    string="Rejeter"
+                                    type="action"
+                                   invisible="state in ('draft','rejected')  "/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,administrative_control,deeper_check,approved"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="initiateur_id"/>
+                                <field name="date_demande"/>
+                            </group>
+                            <group>
+                                <field name="type_demande"/>
+                                <field name="delai_imparti" invisible="state=='draft'"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Pièces à fournir">
+                                <group>
+                                    <field name="declaration_denree"/>
+                                    <field name="certificat_sanitaire"/>
+                                    <field name="photocopie_cni"/>
+                                    <field name="recu_paiement"/>
+                                </group>
+                            </page>
+
+                            <page string="Details du rejet" invisible="state != 'rejected'">
+                                <group>
+                                    <field name="rejection_reason" />
+                                </group>
+                            </page>
+
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="laissez_passer_tree_view" model="ir.ui.view">
+            <field name="name">laissez.passer.tree</field>
+            <field name="model">laissez.passer</field>
+            <field name="arch" type="xml">
+                <tree string="Demandes de Laissez-passer">
+                    <field name="name"/>
+                    <field name="initiateur_id"/>
+                    <field name="date_demande"/>
+                    <field name="state" widget="badge" decoration-success="state == 'approved'"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="laissez_passer_action" model="ir.actions.act_window">
+            <field name="name">Laissez-passers Sanitaires</field>
+            <field name="res_model">laissez.passer</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_laissez_passer_root" name="Laissez-passers Sanitaires" sequence="40"/>
+        <menuitem id="menu_laissez_passer_requests" name="Demandes de Laissez-passer" parent="menu_laissez_passer_root" action="laissez_passer_action" sequence="10"/>
+    </data>
+</odoo>

@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vet_certificate_user,Vet Certificate User,model_vet_certificate,base.group_user,1,1,1,1
+access_vet_certificate_officer,Vet Certificate Officer,model_vet_certificate,patnuc_minepia_certificat_sanitaire.group_agent_service_veterinaire,1,0,1,
+access_vet_rejet_wizard_user,Vet Rejet Wizard User,model_vet_rejet_wizard,base.group_user,1,1,1,1

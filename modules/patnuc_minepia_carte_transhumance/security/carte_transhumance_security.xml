@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Définition d'une nouvelle catégorie pour nos groupes -->
+    <record id="module_category_procedures_minepia_cart_transh" model="ir.module.category">
+        <field name="name">Service Régional des Pâturages et de l’Hydraulique Pastorale.</field>
+        <field name="description">Groupes liés aux agents qui gerent la procedure d'obtention d'une carte de transhumance</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- Groupe Agent du minepia -->
+    <record id="group_agent_service_veterinaire" model="res.groups">
+        <field name="name">Agent du SRP</field>
+        <field name="category_id" ref="module_category_procedures_minepia_cart_transh"/>
+    </record>
+
+
+</odoo>

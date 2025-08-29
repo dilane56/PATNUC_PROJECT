@@ -1,0 +1,89 @@
+<odoo>
+    <data>
+        <record id="seq_carte_transhumance" model="ir.sequence">
+            <field name="name">Carte de Transhumance</field>
+            <field name="code">carte.transhumance</field>
+            <field name="prefix">CT-%(year)s-</field>
+            <field name="padding">4</field>
+        </record>
+
+        <record id="carte_transhumance_form_view" model="ir.ui.view">
+            <field name="name">carte.transhumance.form</field>
+            <field name="model">carte.transhumance</field>
+            <field name="arch" type="xml">
+                <form string="Carte de Transhumance">
+                    <header>
+                        <button name="action_submit" type="object" string="Soumettre" invisible="state != 'draft'" class="oe_highlight"/>
+                        <button name="action_deeper_check" type="object" string=" Passer Vérification Approfondie" invisible="state !='administrative_check'" class="oe_highlight"/>
+                        <button name="action_approve" type="object" string="Approuver la Carte" invisible="state != 'deeper_check'" class="oe_highlight"/>
+
+                        <button name="%(action_carte_rejet_wizard)d" string="Rejeter" type="action" invisible="state in ('draft','rejected')"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,administrative_check,deeper_check,approved"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="initiateur_id"/>
+                                <field name="date_demande"/>
+                                <field name="proprietaire"/>
+                            </group>
+                            <group>
+                                <field name="destination"/>
+                                <field name="delai_imparti"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Pièces à fournir">
+                                <field name="document_ids" context="{'default_request_id': active_id}">
+                                <tree editable="bottom">
+                                    <field name="type_id"/>
+                                    <field name="file" filename="filename"/>
+                                    <field name="filename"/>
+                                    <field name="provided" readonly="1"/>
+                                    <field name="note"/>
+                                </tree>
+                            </field>
+                            <field name="required_missing_count" string="Documents requis manquants" readonly="1"/>
+                            </page>
+                            <page string="Détails du rejet" invisible="state != 'rejected'" >
+                                <group>
+                                    <field name="rejection_reason"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="carte_transhumance_tree_view" model="ir.ui.view">
+            <field name="name">carte.transhumance.tree</field>
+            <field name="model">carte.transhumance</field>
+            <field name="arch" type="xml">
+                <tree string="Demandes de Cartes de Transhumance">
+                    <field name="name"/>
+                    <field name="initiateur_id"/>
+                    <field name="date_demande"/>
+                    <field name="state" widget="badge" decoration-success="state == 'approved'"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="carte_transhumance_action" model="ir.actions.act_window">
+            <field name="name">Cartes de Transhumance</field>
+            <field name="res_model">carte.transhumance</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_transhumance_root" name="Cartes de Transhumance" sequence="50"/>
+        <menuitem id="menu_transhumance_requests" name="Demandes de Carte" parent="menu_transhumance_root" action="carte_transhumance_action" sequence="10"/>
+    </data>
+</odoo>

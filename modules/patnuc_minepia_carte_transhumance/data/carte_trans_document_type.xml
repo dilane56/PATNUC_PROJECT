@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="cart_doc_demande_timbrée" model="carte.document.type">
+        <field name="name">Demande timbrée au tarif en vigueur</field>
+        <field name="code">DEMANDE_TIMBREE</field>
+        <field name="required">True</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="cart_doc_photocopie_cni_prop" model="carte.document.type">
+        <field name="name">Photocopie CNI Propriétaire</field>
+        <field name="code">PHOTOCOPIE_CNI_PRO</field>
+        <field name="required">True</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="cart_doc_photocopie_cni_ber" model="carte.document.type">
+        <field name="name">Photocopie CNI Berger</field>
+        <field name="code">PHOTOCOPIE_CNI_BER</field>
+        <field name="required">True</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="cart_doc_certificat_st" model="carte.document.type">
+        <field name="name">Certificat Sanitaire</field>
+        <field name="code">CERTIFICAT_SANITAIRE</field>
+        <field name="required">True</field>
+        <field name="sequence">40</field>
+    </record>
+
+
+    <record id="cart_doc_laisser_pass" model="carte.document.type">
+        <field name="name">Laisser Passer Sanitaire</field>
+        <field name="code">LAISSER_PASSER</field>
+        <field name="required">True</field>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="cart_doc_recu_pay_tax_inp_snt" model="carte.document.type">
+        <field name="name">Reçu de paiement de la taxe d'inspection sanitaire</field>
+        <field name="code">RECU_PAY_TAXE_INS_SAN</field>
+        <field name="required">True</field>
+        <field name="sequence">60</field>
+    </record>
+</odoo>

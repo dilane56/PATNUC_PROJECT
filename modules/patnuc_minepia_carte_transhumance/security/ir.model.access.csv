@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_carte_transhumance_user,Carte Transhumance User,model_carte_transhumance,base.group_user,1,1,1,1
+access_carte_transhumance_agent,Carte Transhumance Agent,model_carte_transhumance,patnuc_minepia_carte_transhumance.group_agent_service_veterinaire,1,1,1,1
+access_carte_rejet_wizard_user,Carte Rejet Wizard User,model_carte_rejet_wizard,base.group_user,1,1,1,1
+access_carte_transhumance_document,Carte Transhumance Document User,model_carte_document,base.group_user,1,1,1,1
+access_carte_document_type_user,Carte Document Type User,model_carte_document_type,base.group_user,1,1,1,1
