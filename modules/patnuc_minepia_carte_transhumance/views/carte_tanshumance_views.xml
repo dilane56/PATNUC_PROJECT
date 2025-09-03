@@ -12,12 +12,15 @@
             <field name="model">carte.transhumance</field>
             <field name="arch" type="xml">
                 <form string="Carte de Transhumance">
-                    <header>
-                        <button name="action_submit" type="object" string="Soumettre" invisible="state != 'draft'" class="oe_highlight"/>
-                        <button name="action_deeper_check" type="object" string=" Passer Vérification Approfondie" invisible="state !='administrative_check'" class="oe_highlight"/>
-                        <button name="action_approve" type="object" string="Approuver la Carte" invisible="state != 'deeper_check'" class="oe_highlight"/>
 
-                        <button name="%(action_carte_rejet_wizard)d" string="Rejeter" type="action" invisible="state in ('draft','rejected')"/>
+
+                    <header>
+
+                        <button name="action_submit" type="object" string="Soumettre" invisible="state != 'draft'" class="oe_highlight"/>
+                        <button name="action_administrative_check_ok" type="object" string="Valider la vérification" invisible="state != 'administrative_check'" class="oe_highlight" groups="patnuc_minepia_carte_transhumance.group_agent_service_regional_paturage"/>
+                        <button name="action_deeper_check_ok" type="object" string="Approuver la Carte" invisible="state != 'deeper_check' or deeper_check_result != 'favorable'" groups="patnuc_minepia_carte_transhumance.group_agent_service_regional_paturage" class="oe_highlight"/>
+
+                        <button name="%(action_carte_rejet_wizard)d" string="Rejeter" type="action" invisible="state in ('draft','rejected','approved')"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,administrative_check,deeper_check,approved"/>
                     </header>
                     <sheet>
@@ -36,23 +39,58 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Pièces à fournir">
-                                <field name="document_ids" context="{'default_request_id': active_id}">
-                                <tree editable="bottom">
-                                    <field name="type_id"/>
-                                    <field name="file" filename="filename"/>
-                                    <field name="filename"/>
-                                    <field name="provided" readonly="1"/>
-                                    <field name="note"/>
-                                </tree>
-                            </field>
-                            <field name="required_missing_count" string="Documents requis manquants" readonly="1"/>
+
+                            <page string="Pièces à fournir"  >
+                                    <field name="document_ids" readonly="state !='draft'">
+                                        <tree editable="bottom">
+                                            <field name="type_id" />
+                                            <field name="file" filename="filename" />
+                                            <field name="filename" readonly="1"/>
+                                        </tree>
+                                    </field>
+                                    <field name="required_missing_count" string="Documents requis manquants" readonly="1"/>
                             </page>
+
+
+
+                            <page string="Vérification administrative" invisible="state == 'draft'" readonly="state != 'administrative_check'" groups="patnuc_minepia_carte_transhumance.group_agent_service_regional_paturage">
+                                 <field name="document_ids">
+                                        <tree editable="bottom">
+                                            <field name="type_id" readonly="1" />
+                                            <field name="file" filename="filename" readonly="1" />
+                                            <field name="is_valid" string="Document valide" readonly="parent.state != 'administrative_check'" />
+                                        </tree>
+                                    </field>
+                                    <field name="required_missing_count" string="Documents requis manquants" readonly="1"/>
+                                    <field name="is_admin_check_ok" string="Vérification administrative validée" readonly="1"/>
+
+                                <group string="information complementaire sur la verification">
+                                    <field name="administrative_check_comment"/>
+                                    <field name="administrative_checker_id" readonly="1"/>
+                                    <field name="administrative_check_date" readonly="1"/>
+                                </group>
+
+                            </page>
+
+                             <page string="Vérification Approfondie" invisible="state not in ('deeper_check', 'approved')" groups="patnuc_minepia_carte_transhumance.group_agent_service_regional_paturage">
+
+                                    <group>
+                                        <field name="deeper_check_result" readonly="state != 'deeper_check'"/>
+                                    </group>
+                                    <group string="informations supplmentaires sur la verification">
+                                        <field name="deeper_checker_id" readonly="1"/>
+                                        <field name="deeper_check_date" readonly="1"/>
+                                    </group>
+
+                            </page>
+
                             <page string="Détails du rejet" invisible="state != 'rejected'" >
                                 <group>
                                     <field name="rejection_reason"/>
                                 </group>
                             </page>
+
+
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">

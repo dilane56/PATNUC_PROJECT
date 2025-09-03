@@ -28,7 +28,9 @@
        'security/vet_vertificate_security.xml',
         'security/ir.model.access.csv',
         'views/vet_reject_wizard_views.xml',
-        'views/vet_certificate_views.xml'
+        'reports/vet_certificate_report.xml',
+        'views/vet_certificate_views.xml',
+
     ],
     # only loaded in demonstration mode
     'demo': [

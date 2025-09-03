@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_form_certification_operator" model="ir.ui.view">
+        <field name="name">certification.operator.form</field>
+        <field name="model">certification.operator</field>
+        <field name="arch" type="xml">
+            <form string="Opérateur Semencier">
+                <sheet>
+                    <group col="4" string="Informations générales">
+                        <group colspan="2">
+                            <field name="name"/>
+                            <field name="operator_type"/>
+                            <field name="state" readonly="1"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="professional_card"/>
+                            <field name="technical_approval"/>
+                            <field name="cni_number"/>
+                        </group>
+                    </group>
+                    <group col="4" string="Coordonnées">
+                        <group colspan="2">
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="address"/>
+                        </group>
+                    </group>
+                    <group string="Sites de production">
+                        <field name="production_sites">
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="location"/>
+                                <field name="surface_area"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tree_certification_operator" model="ir.ui.view">
+        <field name="name">certification.operator.tree</field>
+        <field name="model">certification.operator</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="operator_type"/>
+                <field name="state"/>
+                <field name="certification_count"/>
+                <field name="phone"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_certification_operator" model="ir.actions.act_window">
+        <field name="name">Opérateurs</field>
+        <field name="res_model">certification.operator</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Enregistrez vos informations ici !
+            </p>
+        </field>
+    </record>
+<!-- 
+    <menuitem id="menu_certification_root" name="Certification" sequence="10"/>
+    <menuitem id="menu_certification_operator" name="Opérateurs" parent="menu_certification_root"
+              action="action_certification_operator" sequence="1"/> -->
+</odoo>

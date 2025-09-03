@@ -8,7 +8,7 @@
     </record>
 
     <!-- Groupe Agent du minepia -->
-    <record id="group_agent_service_veterinaire" model="res.groups">
+    <record id="group_agent_service_regional_paturage" model="res.groups">
         <field name="name">Agent du SRP</field>
         <field name="category_id" ref="module_category_procedures_minepia_cart_transh"/>
     </record>

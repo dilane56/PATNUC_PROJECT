@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_form_laboratory_analysis" model="ir.ui.view">
+        <field name="name">certification.laboratory.analysis.form</field>
+        <field name="model">certification.laboratory.analysis</field>
+        <field name="arch" type="xml">
+            <form string="Analyse Laboratoire">
+                <sheet>
+                    <group col="4" string="Informations générales">
+                        <group colspan="2">
+                            <field name="name" readonly="1"/>
+                            <field name="request_id"/>
+                            <field name="laboratory_id"/>
+                            <field name="analysis_date"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="analyst_id"/>
+                            <field name="state"/>
+                            <field name="result"/>
+                        </group>
+                    </group>
+                    <group col="4" string="Tests réalisés">
+                        <group colspan="2">
+                            <field name="germination_test"/>
+                            <field name="germination_rate"/>
+                            <field name="humidity_test"/>
+                            <field name="humidity_rate"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="purity_test"/>
+                            <field name="purity_rate"/>
+                            <field name="varietal_purity"/>
+                            <field name="varietal_purity_rate"/>
+                        </group>
+                    </group>
+                    <group col="4" string="Documents et avis">
+                        <group colspan="2">
+                            <field name="analysis_report" filename="analysis_report_filename"/>
+                            <field name="analysis_report_filename" placeholder="Nom du fichier uploadé" invisible="1"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="technical_opinion"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tree_laboratory_analysis" model="ir.ui.view">
+        <field name="name">certification.laboratory.analysis.tree</field>
+        <field name="model">certification.laboratory.analysis</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="request_id"/>
+                <field name="laboratory_id"/>
+                <field name="analysis_date"/>
+                <field name="state"/>
+                <field name="result"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_certification_laboratory_analysis" model="ir.actions.act_window">
+        <field name="name">Analyses Laboratoire</field>
+        <field name="res_model">certification.laboratory.analysis</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Enregistrez vos informations ici !
+            </p>
+        </field>
+    </record>
+<!-- 
+    <menuitem id="menu_certification_laboratory_analysis" name="Analyses labo"
+              parent="menu_certification_root" action="action_certification_laboratory_analysis" sequence="4"/> -->
+</odoo>

@@ -1,4 +1,6 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
+
 
 class LaissezPasserSanitaire(models.Model):
     _name = 'laissez.passer'
@@ -35,10 +37,18 @@ class LaissezPasserSanitaire(models.Model):
     cni_ok = fields.Boolean(string="CNI valide")
     recu_paiement_ok = fields.Boolean(string="Reçu de paiement valide")
 
-    administrative_check_comment = fields.Text(string="Commentaires de l'agent")
+    administrative_check_comment = fields.Char(string="Commentaires de l'agent de verification admin")
     
     # Champ calculé pour la validation
     can_validate_admin = fields.Boolean(string="Peut valider", compute="_compute_can_validate_admin")
+
+    # Verification approfondie
+    deeper_check_date = fields.Date(string="Date de la vérification approfondie", readonly=True)
+    deeper_checker_id = fields.Many2one('res.users', string="Agent de la vérification approfondie", readonly=True)
+    deeper_check_result = fields.Selection([
+        ('favorable', ' Favorable'),
+        ('unfavorable', ' Défavorable'),
+    ], string="Avis sur la demande", required=False)
 
     #Motif de rejet
     rejection_reason = fields.Text(string='Motif de rejet')
@@ -74,7 +84,7 @@ class LaissezPasserSanitaire(models.Model):
         self.message_post(body="La demande de laissez-passer a et la verification administrative est en attente.")
 
 
-    def action_deeper_check(self):
+    def action_admin_check_ok(self):
         """Action pour valider la demande après vérification administrative."""
         if not self._all_documents_validated():
             from odoo.exceptions import ValidationError
@@ -84,7 +94,21 @@ class LaissezPasserSanitaire(models.Model):
         self.state = 'deeper_check'
         self.administrative_check_date = fields.Date.today()
         self.administrative_checker_id = self.env.user.id
-        self.message_post(body="Vérification administrative effectuée et approuvée. La demande passe à l'étape de vérification approfondie.")
+        self.message_post(body="Vérification administrative effectuée et approuvée. Vérification approfondie en attente.")
+
+    def action_deeper_check_ok(self):
+        """Action pour valider la vérification approfondie et passer à l'approbation."""
+        self.ensure_one()
+        if self.deeper_check_result != 'favorable':
+            raise ValidationError("La demande ne peut être validée qu'avec un avis favorable.")
+
+        self.state = 'approved'
+        self.deeper_check_date = fields.Date.today()
+        self.deeper_checker_id = self.env.user.id
+        self.message_post(
+            body="Vérification approfondie validée avec un avis favorable. La demande passe à l'approbation.")
+
+
 
     def action_approve(self):
         """Action pour approuver et délivrer le laissez-passer."""

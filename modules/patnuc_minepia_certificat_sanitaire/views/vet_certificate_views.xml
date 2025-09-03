@@ -15,13 +15,14 @@
                     <header>
                         <button name="action_submit" type="object" string="Soumettre" invisible="state != 'draft'" class="oe_highlight"/>
                         <button name="action_technical_inspection" type="object" string="Valider la vérification et Lancer la verification approfondie" invisible="state !='administrative_control'" groups="patnuc_minepia_certificat_sanitaire.group_agent_service_veterinaire" class="oe_highlight" readonly="[('can_validate_admin', '=', False)]"/>
-                        <button name="action_approve" type="object" string="Approuver le certificat" invisible="state != 'deep_check'" class="oe_highlight"/>
-                        <button name="%(action_vet_rejet_wizard)d"
-                                    string="Rejeter"
-                                    type="action"
-                                    invisible="state in ('draft', 'rejected', '')" />
+                        <button name="action_deeper_check_ok" type="object" string="Approuver la demande" invisible="state != 'deep_check' or deeper_check_result != 'favorable'" groups="patnuc_minepia_certificat_sanitaire.group_agent_service_veterinaire" class="oe_highlight"/>
 
-                        <field name="state" widget="statusbar" statusbar_visible="draft,administrative_control,deep_check,approved"/>
+                        <button name="action_approve" type="object" string="Approuver et signer" invisible="state != 'signed'" class="oe_highlight"/>
+
+                        <button name="download_certificate_file" string="Télécharger le certificat" type="object" invisible="state != 'approved'"/>
+
+                        <button name="%(action_vet_rejet_wizard)d" string="Rejeter" type="action" invisible="state in ('draft', 'rejected', 'approved','signed')" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,administrative_control,deep_check,signed,approved"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -48,22 +49,42 @@
                                 </group>
                             </page>
                             <page string="Verification administrative" invisible="state =='draft'" groups="patnuc_minepia_certificat_sanitaire.group_agent_service_veterinaire"  >
-                                <group>
+
                                     <group>
                                          <field name="declaration_ok" readonly="state !='administrative_control'"/>
                                         <field name="certificat_sanitaire_ok" readonly="state !='administrative_control'"/>
                                         <field name="cni_ok" readonly="state !='administrative_control'"/>
                                         <field name="recu_paiement_ok" readonly="state !='administrative_control'"/>
                                     </group>
-                                    <group>
+                                    <group string="Information supplementaire sur la verification">
+                                        <field name="administrative_check_comment"  readonly="state !='administrative_control'"/>
                                         <field name="administrative_check_date" readonly="1"/>
                                         <field name="administrative_checker_id" readonly="1"/>
                                     </group>
 
-                                </group>
-                                <field name="administrative_check_comment" placeholder="Ajouter des commentaires sur la vérification..." readonly="state !='administrative_control'"/>
+
 
                             </page>
+
+                            <page string="Vérification Approfondie" invisible="state  in ('administrative_control','draft',)" groups="patnuc_minepia_certificat_sanitaire.group_agent_service_veterinaire">
+
+                                    <group>
+                                        <field name="deeper_check_result" readonly="state != 'deep_check'"/>
+                                    </group>
+
+                                    <group string="information supplementaire sur la verification">
+                                        <field name="deep_checker_id" readonly="1"/>
+                                        <field name="deep_check_date" readonly="1"/>
+                                    </group>
+
+                            </page>
+
+                            <page string="Signature" invisible="state not in ('signed','approved')">
+                                  <group string="Signature de l'approbateur" >
+                                    <field name="signed_by_signature" widget="signature"/>
+                                  </group>
+                            </page>
+
                             <page string="Details du rejet" invisible="state != 'rejected'">
                                 <group>
                                     <field name="rejection_reason" readonly="1"/>

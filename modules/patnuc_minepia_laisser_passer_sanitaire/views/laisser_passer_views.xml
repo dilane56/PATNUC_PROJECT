@@ -14,12 +14,12 @@
                 <form string="Laissez-passer Sanitaire">
                     <header>
                         <button name="action_submit" type="object" string="Soumettre" invisible="state != 'draft'"  class="oe_highlight"/>
-                        <button name="action_deeper_check" type="object" string="Lancer la vérification approfondie" invisible="state !='administrative_control'" groups="patnuc_minepia_laisser_passer_sanitaire.group_agent_service_veterinaire_lp" class="oe_highlight" readonly="[('can_validate_admin', '=', False)]"/>
-                        <button name="action_approve" type="object" string="Approuver le laissez-passer" invisible="state !='deeper_check'" class="oe_highlight"/>
+                        <button name="action_admin_check_ok" type="object" string="Lancer la vérification approfondie" invisible="state !='administrative_control'" groups="patnuc_minepia_laisser_passer_sanitaire.group_agent_service_veterinaire_lp" class="oe_highlight" readonly="[('can_validate_admin', '=', False)]"/>
+                        <button name="action_deeper_check_ok" type="object" string="Approuver le laissez-passer" invisible="state != 'deeper_check' or deeper_check_result != 'favorable'" groups="patnuc_minepia_laisser_passer_sanitaire.group_agent_service_veterinaire_lp" class="oe_highlight"/>
                         <button name="%(patnuc_minepia_laisser_passer_sanitaire.action_laissez_passer_rejet_wizard)d"
                                     string="Rejeter"
                                     type="action"
-                                   invisible="state in ('draft','rejected')  "/>
+                                   invisible="state in ('draft','rejected','approved')  "/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,administrative_control,deeper_check,approved"/>
                     </header>
                     <sheet>
@@ -45,7 +45,8 @@
                                     <field name="recu_paiement" readonly="state != 'draft'"/>
                                 </group>
                             </page>
-                             <page string="Vérification administrative"
+
+                            <page string="Vérification administrative"
                                   invisible="state =='draft'" groups="patnuc_minepia_laisser_passer_sanitaire.group_agent_service_veterinaire_lp">
                                 <group>
                                     <group>
@@ -59,9 +60,20 @@
                                         <field name="administrative_checker_id" readonly="1"/>
                                     </group>
                                 </group>
-                                <field name="administrative_check_comment" placeholder="Ajouter des commentaires sur la vérification..." readonly="state != 'administrative_control'"/>
+                                <field name="administrative_check_comment"  readonly="state != 'administrative_control'"/>
                             </page>
 
+                            <page string="Vérification Approfondie" invisible="state in ('draft','administrative_control')" groups="patnuc_minepia_laisser_passer_sanitaire.group_agent_service_veterinaire_lp">
+
+                                    <group>
+                                        <field name="deeper_check_result" readonly="state != 'deeper_check'"/>
+                                    </group>
+                                    <group string="information supplementaire sur la verification">
+                                        <field name="deeper_checker_id" readonly="1"/>
+                                        <field name="deeper_check_date" readonly="1"/>
+                                    </group>
+
+                            </page>
 
                             <page string="Details du rejet" invisible="state != 'rejected'">
                                 <group>

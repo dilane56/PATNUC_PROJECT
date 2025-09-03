@@ -1,5 +1,6 @@
 
 from odoo import models, fields, api, _
+from . import carte_transhumance
 
 
 class CarteDocumentType(models.Model):
@@ -25,6 +26,10 @@ class CarteDocument(models.Model):
     filename = fields.Char(string="Nom du fichier")
     provided = fields.Boolean(string="Fourni", compute="_compute_provided", store=True)
     note = fields.Text(string="Commentaire")
+
+    # Nouveaux champs pour la validation administrative
+    is_valid = fields.Boolean(string="Validé", default=False)
+    validation_note = fields.Char(string="Note de l'agent")
 
     @api.depends("file")
     def _compute_provided(self):

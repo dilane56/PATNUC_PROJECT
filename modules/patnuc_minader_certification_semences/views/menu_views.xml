@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu racine -->
+    <menuitem id="menu_certification_root" name="Certification Semences"
+              web_icon="patnuc_minader_certification_semences,../static/description/icon.svg" sequence="10"/>
+    
+    <!-- Menu Demandes -->
+    <menuitem id="menu_certification_requests" name="Demandes" parent="menu_certification_root" sequence="10"/>
+    <menuitem id="menu_certification_request_all" name="Toutes les demandes" 
+              parent="menu_certification_requests" action="action_certification_request" sequence="10"/>
+    <menuitem id="menu_certification_request_pending" name="En attente" 
+              parent="menu_certification_requests" sequence="20"/>
+    <menuitem id="menu_certification_request_approved" name="Approuvées" 
+              parent="menu_certification_requests" sequence="30"/>
+    
+    <!-- Menu Opérateurs -->
+    <menuitem id="menu_certification_operators" name="Opérateurs" parent="menu_certification_root" sequence="20"/>
+    <menuitem id="menu_certification_operator_all" name="Tous les opérateurs" 
+              parent="menu_certification_operators" action="action_certification_operator" sequence="10"/>
+    
+    <!-- Menu Contrôles -->
+    <menuitem id="menu_certification_controls" name="Contrôles" parent="menu_certification_root" sequence="30"/>
+    <menuitem id="menu_certification_field_control" name="Contrôles terrain" 
+              parent="menu_certification_controls" action="action_certification_field_control" sequence="10"/>
+    <menuitem id="menu_certification_laboratory_analysis" name="Analyses laboratoire" 
+              parent="menu_certification_controls" action="action_certification_laboratory_analysis" sequence="20"/>
+    <menuitem id="menu_certification_technical_review" name="Examen Technique" 
+              parent="menu_certification_controls" action="action_certification_technical_review" sequence="30"/>
+    
+    <!-- Menu Certificats -->
+    <menuitem id="menu_certification_certificates" name="Certificats" parent="menu_certification_root" sequence="40"/>
+    <menuitem id="menu_certification_certificate_all" name="Tous les certificats" 
+              parent="menu_certification_certificates" action="action_certification_certificate" sequence="10"/>
+
+    <!-- Menu Gestion de la production -->
+    <menuitem id="menu_production_management_sites" name="Gestion de la production" parent="menu_certification_root" sequence="50"/>
+    <menuitem id="menu_production_sites" name="Tous les sites de production" 
+              parent="menu_production_management_sites" action="action_production_site" sequence="10"/>
+    
+    <!-- Menu Configuration laboratoires-->
+    <menuitem id="menu_certification_configuration" name="Configuration" parent="menu_certification_root" sequence="60"/>
+    <menuitem id="menu_certification_laboratory" name="Laboratoires" 
+              parent="menu_certification_configuration" action="action_certification_laboratory" sequence="10"/>
+</odoo>

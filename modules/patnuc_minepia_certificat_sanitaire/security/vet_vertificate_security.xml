@@ -13,5 +13,11 @@
         <field name="category_id" ref="module_category_procedures_minepia"/>
     </record>
 
+        <record id="group_delegue_regional_csv" model="res.groups">
+            <field name="name">Délegué Régionale</field>
+            <field name="category_id" ref="module_category_procedures_minepia"/>
+        </record>
+
+
 
 </odoo>

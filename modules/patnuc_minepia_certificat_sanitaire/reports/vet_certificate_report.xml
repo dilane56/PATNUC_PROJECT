@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            id="action_report_vet_certificate"
+            model="vet.certificate"
+            string="Certificat Sanitaire Vétérinaire"
+            report_type="qweb-pdf"
+            name="report_vet_certificate_template"
+            file="patnuc_minepia_certificat_sanitaire.report_vet_certificate_template"
+            print_report_name="'Certificat_Vétérinaire_%s' % (object.name)"
+        />
+
+        <template id="report_vet_certificate_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            
+                            <h2 class="text-center">Certificat Sanitaire Vétérinaire</h2>
+                            <div class="row mt32 mb32">
+                                <div class="col-6">
+                                    <strong>Numéro de certificat :</strong> <span t-field="doc.name"/>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <strong>Date de demande :</strong> <span t-field="doc.date_demande" t-options='{"widget": "date"}'/>
+                                </div>
+                            </div>
+
+                            <p>
+                                Ce certificat atteste que la demande de <strong t-field="doc.initiateur_id.name"/> pour un certificat sanitaire vétérinaire de type <strong t-field="doc.type_demande"/> a été approuvée.
+                            </p>
+
+                            <div class="mt32 mb32">
+                                <strong>Type de demande :</strong> <span t-field="doc.type_demande"/>
+                            </div>
+
+                            <p>
+                                Cet avis a été rendu suite à une vérification approfondie par nos services, le <span t-field="doc.deep_check_date" t-options='{"widget": "date"}'/>, et est : <strong t-field="doc.deeper_check_result"/>.
+                            </p>
+
+                            <div class="row mt-5">
+                                <div class="col-6">
+                                    <strong>Vérifié par :</strong> <span t-field="doc.deep_checker_id.name"/>
+                                    <p>Agent du Service Vétérinaire</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -2,7 +2,7 @@
 {
     'name': "patnuc_minepia_carte_transhumance",
 
-     'version': '1.0',
+    'version': '1.0',
     'depends': ['base', 'mail'],
     'author': "KAMGAING FOTSO ROMARIC",
     'category': 'Administration',
@@ -17,7 +17,6 @@
         'security/ir.model.access.csv',
         'views/carte_reject_wizard_views.xml',
         'data/carte_trans_document_type.xml',
-        'views/carte_tanshumance_views.xml'
+        'views/carte_tanshumance_views.xml'  # Corrected typo here
     ],
 }
-

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue formulaire pour demande de certification -->
+    <record id="view_certification_request_form" model="ir.ui.view">
+        <field name="name">certification.request.form</field>
+        <field name="model">certification.request</field>
+        <field name="arch" type="xml">
+            <form string="Demande de Certification">
+                <header>
+                    <button name="ret_submit" string="Retourner à la soumission" type="object" class="btn-warning" invisible="state != 'submitted'"/>
+                    <button name="ret_receive" string="Retourner à la soumission" type="object" class="btn-warning" invisible="state != 'received'"/>
+                    <button name="ret_field_control" string="Retourner au contrôle terrain" type="object" class="btn-warning" invisible="state != 'field_control'"/>
+                    <button name="ret_laboratory_analysis" string="Retourner à l'analyse laboratoire" type="object" class="btn-warning" invisible="state != 'laboratory_analysis'"/>
+                    <button name="ret_technical_review" string="Retourner à l'examen technique" type="object" class="btn-warning" invisible="state != 'technical_review'"/>
+
+                    <button name="action_submit" string="Soumettre" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_receive" string="Réceptionner" type="object" class="btn-success" invisible="state != 'submitted'"/>
+                    <button name="action_start_field_control" string="Lancer Contrôle Terrain" type="object" class="btn-info" invisible="state != 'received'"/>
+                    <button name="action_start_laboratory_analysis" string="Lancer Analyse Laboratoire" type="object" class="btn-info" invisible="state != 'field_control'"/>
+                    <button name="action_start_technical_review" string="Lancer Examen Technique" type="object" class="btn-info" invisible="state != 'laboratory_analysis'"/>
+                    <button name="action_approve" string="Approuver" type="object" class="btn-success" invisible="state != 'technical_review'"/>
+                    <button name="action_reject" string="Rejeter" type="object" class="btn-danger" invisible="state != 'technical_review'"/>
+                    
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,received,field_control,laboratory_analysis,technical_review,certificate_issued"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                            
+                        </h1>
+                    </div>
+                    <group col="4">
+                        <group colspan="2">
+                            <field name="operator_id" options="{'no_create': True}"/>
+                            <field name="production_site_id" domain="[('operator_id', '=', operator_id)]"/>
+                            <field name="seed_variety"/>
+                            <field name="production_area"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="regional_officer_id" invisible="state != 'received'"/>
+                            <field name="submission_date"/>
+                            <field name="reception_date"/>
+                            <field name="expected_completion_date"/>
+                            <field name="completion_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Informations générales">
+                            <group col="4">
+                                <group colspan="2">
+                                    <field name="seed_origin"/>
+                                </group>
+                                <group colspan="2">
+                                    <field name="cultivation_plan"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Documents requis">
+                            <group col="4">
+                                <group colspan="2">
+                                    <field name="request_form" filename="request_form_filename"/>
+                                    <field name="request_form_filename" placeholder="Nom du fichier uploadé" invisible="1"/>
+                                    <field name="professional_card" filename="professional_card_filename"/>
+                                    <field name="professional_card_filename" placeholder="Nom du fichier uploadé" invisible="1"/>
+                                    <field name="cultivation_plan_doc" filename="cultivation_plan_doc_filename"/>
+                                    <field name="cultivation_plan_doc_filename" placeholder="Nom du fichier uploadé" invisible="1"/>
+                                    <field name="soil_analysis" filename="soil_analysis_filename"/>
+                                    <field name="soil_analysis_filename" placeholder="Nom du fichier uploadé" invisible="1"/>
+                                </group>
+                                <group colspan="2">
+                                    <field name="seed_origin_certificate" filename="seed_origin_certificate_filename"/>
+                                    <field name="seed_origin_certificate_filename" placeholder="Nom du fichier uploadé" invisible="1"/>
+                                    <field name="cni_copy" filename="cni_copy_filename"/>
+                                    <field name="cni_copy_filename" placeholder="Nom du fichier uploadé" invisible="1"/>
+                                    <field name="location_proof" filename="location_proof_filename"/>
+                                    <field name="location_proof_filename" placeholder="Nom du fichier uploadé" invisible="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Contrôles terrain">
+                            <field name="field_control_ids" readonly="1">
+                                <tree>
+                                    <field name="scheduled_date"/>
+                                    <field name="actual_date"/>
+                                    <field name="inspector_id"/>
+                                    <field name="state"/>
+                                    <field name="result"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Analyses laboratoire">
+                            <field name="laboratory_analysis_ids" readonly="1">
+                                <tree>
+                                    <field name="analysis_date"/>
+                                    <field name="laboratory_id"/>
+                                    <field name="state"/>
+                                    <field name="result"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Examens Techniques">
+                            <field name="technical_exam_ids" readonly="1">
+                                <tree>
+                                    <field name="review_date"/>
+                                    <field name="reviewer_id"/>
+                                    <field name="review_notes"/>
+                                    <field name="validation_date"/>
+                                    <field name="state"/>
+                                    <field name="result"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Certificat">
+                            <group col="4">
+                                <group colspan="2">
+                                    <field name="certificate_id" readonly="1"/>
+                                </group>
+                                <group colspan="2">
+                                    <button name="action_get_certificat" type="object" string="Imprimer le certificat" class="btn-primary"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes"/>
+                            <field name="rejection_reason" invisible="state != 'rejected'"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Vue liste pour demandes de certification -->
+    <record id="view_certification_request_tree" model="ir.ui.view">
+        <field name="name">certification.request.tree</field>
+        <field name="model">certification.request</field>
+        <field name="arch" type="xml">
+            <tree string="Demandes de Certification">
+                <field name="name"/>
+                <field name="operator_id"/>
+                <field name="seed_variety"/>
+                <field name="submission_date"/>
+                <field name="regional_officer_id"/>
+                <field name="state" decoration-success="state in ('approved', 'certificate_issued')" 
+                       decoration-warning="state in ('field_control', 'laboratory_analysis')"
+                       decoration-danger="state=='rejected'"/>
+            </tree>
+        </field>
+    </record>
+    
+    <!-- Action pour demandes de certification -->
+    <record id="action_certification_request" model="ir.actions.act_window">
+        <field name="name">Demandes de Certification</field>
+        <field name="res_model">certification.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer une nouvelle demande de certification
+            </p>
+        </field>
+    </record>
+</odoo>

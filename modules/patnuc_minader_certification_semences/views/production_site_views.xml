@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Vue formulaire (form) -->
+    <record id="view_production_site_form" model="ir.ui.view">
+        <field name="name">certification.production.site.form</field>
+        <field name="model">certification.production.site</field>
+        <field name="arch" type="xml">
+            <form string="Site de production">
+                <sheet>
+                    <group col="4" string="Informations générales">
+                        <group colspan="2">
+                            <field name="name"/>
+                            <field name="operator_id"/>
+                            <field name="location"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="surface_area"/>
+                            <field name="coordinates"/>
+                        </group>
+                    </group>
+                    <group col="4" string="Documents">
+                        <group colspan="2">
+                            <field name="land_title" filename="land_title_filename"/>
+                            <field name="land_title_filename" placeholder="Nom du fichier uploadé" invisible="1"/>
+                            <field name="land_lease" filename="land_lease_filename"/>
+                            <field name="land_lease_filename" placeholder="Nom du fichier uploadé" invisible="1"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="location_proof" filename="location_proof_filename"/>
+                            <field name="location_proof_filename" placeholder="Nom du fichier uploadé" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Vue liste (tree) -->
+    <record id="view_production_site_tree" model="ir.ui.view">
+        <field name="name">certification.production.site.tree</field>
+        <field name="model">certification.production.site</field>
+        <field name="arch" type="xml">
+            <tree string="Sites de production">
+                <field name="name"/>
+                <field name="operator_id"/>
+                <field name="location"/>
+                <field name="surface_area"/>
+                <field name="coordinates"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_production_site" model="ir.actions.act_window">
+        <field name="name">Sites de production</field>
+        <field name="res_model">certification.production.site</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>
+                Gérez ici les différents sites de production associés aux opérateurs semenciers.
+            </p>
+        </field>
+    </record>
+
+    
+</odoo>
