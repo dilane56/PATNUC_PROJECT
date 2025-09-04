@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <report
-            id="action_report_vet_certificate"
-            model="vet.certificate"
-            string="Certificat Sanitaire Vétérinaire"
-            report_type="qweb-pdf"
-            name="report_vet_certificate_template"
-            file="patnuc_minepia_certificat_sanitaire.report_vet_certificate_template"
-            print_report_name="'Certificat_Vétérinaire_%s' % (object.name)"
-        />
+        <record id="action_report_vet_certificate" model="ir.actions.report">
+            <field name="name">Certificat Sanitaire Vétérinaire</field>
+            <field name="model">vet.certificate</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">patnuc_minepia_certificat_sanitaire.report_vet_certificate_template</field>
+            <field name="report_file">patnuc_minepia_certificat_sanitaire.report_vet_certificate_template</field>
+            <field name="print_report_name">'Certificat_Vétérinaire_%s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_vet_certificate"/>
+            <field name="binding_type">report</field>
+        </record>
 
         <template id="report_vet_certificate_template">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="doc">
                     <t t-call="web.external_layout">
                         <div class="page">
-                            
+
                             <h2 class="text-center">Certificat Sanitaire Vétérinaire</h2>
                             <div class="row mt32 mb32">
                                 <div class="col-6">
@@ -43,6 +44,18 @@
                                 <div class="col-6">
                                     <strong>Vérifié par :</strong> <span t-field="doc.deep_checker_id.name"/>
                                     <p>Agent du Service Vétérinaire</p>
+                                </div>
+                            </div>
+
+                             <div class="row mt-5">
+                                <div class="col-6">
+                                    <strong>Signé par :</strong> <span t-field="doc.signed_by_id.name"/>
+                                    <p>Délégué Régional / Chef de Service Régional</p>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <t t-if="doc.signed_by_signature">
+                                        <img t-attf-src="data:image/png;base64,{{doc.signed_by_signature}}" style="max-height: 100px;"/>
+                                    </t>
                                 </div>
                             </div>
 

@@ -18,8 +18,7 @@
                         <button name="action_deeper_check_ok" type="object" string="Approuver la demande" invisible="state != 'deep_check' or deeper_check_result != 'favorable'" groups="patnuc_minepia_certificat_sanitaire.group_agent_service_veterinaire" class="oe_highlight"/>
 
                         <button name="action_approve" type="object" string="Approuver et signer" invisible="state != 'signed'" class="oe_highlight"/>
-
-                        <button name="download_certificate_file" string="Télécharger le certificat" type="object" invisible="state != 'approved'"/>
+                        <button name="action_print_certificate" string="Imprimer Certificat" type="object" invisible="state != 'approved'" class="oe_highlight"/>
 
                         <button name="%(action_vet_rejet_wizard)d" string="Rejeter" type="action" invisible="state in ('draft', 'rejected', 'approved','signed')" />
                         <field name="state" widget="statusbar" statusbar_visible="draft,administrative_control,deep_check,signed,approved"/>

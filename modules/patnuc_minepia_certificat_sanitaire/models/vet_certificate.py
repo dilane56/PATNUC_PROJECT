@@ -2,6 +2,7 @@ import base64
 
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+from odoo.tools.safe_eval import datetime
 
 
 class VeterinaryCertificate(models.Model):
@@ -133,28 +134,11 @@ class VeterinaryCertificate(models.Model):
 
         self.message_post(body="Le certificat a été approuvé et signé. Il est prêt pour le téléchargement.")
 
-    def generate_certificate_report(self):
-        """Génère le rapport PDF du certificat et l'attache à l'enregistrement."""
-        try:
-            # Référence correcte du rapport
-            report = self.env.ref('patnuc_minepia_certificat_sanitaire.action_report_vet_certificate')
-            pdf_content, _ = report._render_qweb_pdf(self.ids)
-
-            # Création et attachement du fichier
-            file_name = f"Certificat_Vet_{self.name}.pdf"
-            self.certificate_file = base64.b64encode(pdf_content)
-            self.certificate_filename = file_name
-            self.message_post(body=f"Fichier du certificat généré : {file_name}")
-        except Exception as e:
-            raise ValidationError(f"Erreur lors de la génération du certificat : {str(e)}")
-
-    def download_certificate_file(self):
-        """Action pour télécharger le certificat."""
-        if not self.certificate_file:
-            self.generate_certificate_report()
-        
-        return {
-            'type': 'ir.actions.act_url',
-            'url': f'/web/content/vet.certificate/{self.id}/certificate_file/{self.certificate_filename}?download=true',
-            'target': 'self',
-        }
+    def action_print_certificate(self):
+        """Action pour imprimer le certificat."""
+        # Générer un nom de fichier unique avec un horodatage
+        now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        report_name = f'Certificat_Sanitaire_{self.name}_{now}.pdf'
+        report_action= self.env.ref('patnuc_minepia_certificat_sanitaire.action_report_vet_certificate').report_action(self)
+        report_action['name'] = report_name
+        return report_action
