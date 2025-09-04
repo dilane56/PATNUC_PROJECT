@@ -1,3 +1,5 @@
+import datetime
+
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
@@ -30,13 +32,42 @@ class CarteTranshumance(models.Model):
     is_admin_check_ok = fields.Boolean(string="Vérification administrative validée",
                                        compute="_compute_is_admin_check_ok", store=True)
 
-    # Champs pour la vérification approfondie
-    deeper_check_date = fields.Datetime(string="Date de la vérification approfondie", readonly=True)
-    deeper_checker_id = fields.Many2one('res.users', string="Agent de la vérification approfondie", readonly=True)
-    deeper_check_result = fields.Selection([
-        ('favorable', ' Favorable'),
-        ('unfavorable', ' Défavorable'),
-    ], string="Avis sur la demande", required=False)
+
+    # Inspection sanitaire
+    inspection_agent_id = fields.Many2one('res.users', string='Agent d\'inspection', default=lambda self: self.env.user,  readonly=True)
+    inspection_date = fields.Date(string='Date d\'inspection', default=fields.Date.today())
+    location = fields.Char(string='Lieu de l\'inspection')
+
+    # Critères d'inspection
+    # Nouveaux champs pour l'inspection sur le terrain
+    inspection_date = fields.Date(string="Date d'inspection")
+    inspector_id = fields.Many2one('res.users', string="Agent d'inspection", readonly=True)
+    inspection_report = fields.Text(string="Rapport d'inspection")
+    # Rapport détaillé
+    inspection_report_doc = fields.Binary(string='Rapport d\'inspection détaillé')
+
+    # Checklist de l'inspection (exemple)
+    animal_health_ok = fields.Boolean(string='Santé des animaux vérifiée')
+    facilities_clean_ok = fields.Boolean(string='Installations conformes')
+    vaccination_status_ok = fields.Boolean(string='Statut vaccinal conforme')
+    transport_ok = fields.Boolean(string='Moyen de transport validé')
+    # Champ de conclusion
+    result = fields.Selection([
+        ('favorable', 'Favorable'),
+        ('unfavorable', 'Défavorable'),
+    ], string='Conclusion de l\'inspection')
+
+
+
+
+
+    # Signature et délivrance
+    signature_date = fields.Date(string="Date de signature", readonly=True)
+    signed_by_id = fields.Many2one('res.users', string="Signé par", readonly=True)
+    certificate_file = fields.Binary(string="Fichier du certificat délivré", readonly=True, attachment=True)
+    certificate_filename = fields.Char(string="Nom du fichier")
+    # Champ pour la signature manuscrite
+    signed_by_signature = fields.Binary(string="Signature de l'approbateur", attachment=True)
 
 
     # Motiif de rejet
@@ -48,7 +79,8 @@ class CarteTranshumance(models.Model):
     state = fields.Selection([
         ('draft', 'Brouillon'),
         ('administrative_check', 'Vérification Administrative'),
-        ('deeper_check', 'Vérification Approfondie'),
+        ('inspection', 'Inspection Sanitaire'),
+        ('signed', 'Signature'),
         ('approved', 'Approuvée'),
         ('rejected', 'Rejetée'),
     ], string='Statut', default='draft', tracking=True)
@@ -89,7 +121,7 @@ class CarteTranshumance(models.Model):
             raise ValidationError("Veuillez valider tous les documents fournis avant de continuer.")
 
         self.write({
-            'state': 'deeper_check',
+            'state': 'inspection',
             'administrative_check_date': fields.Datetime.now(),
             'administrative_checker_id': self.env.user.id,
         })
@@ -109,16 +141,45 @@ class CarteTranshumance(models.Model):
         self.state = 'administrative_check'
         self.message_post(body="La demande de carte de transhumance a été soumise et la verification administrative est en attente.")
 
-    def action_deeper_check_ok(self):
-        """Action pour valider la vérification approfondie et passer à l'approbation."""
-        self.ensure_one()
-        if self.deeper_check_result != 'favorable':
-            raise ValidationError("La demande ne peut être validée qu'avec un avis favorable.")
 
+
+    def action_complete_inspection(self):
+        """Action pour valider la fin de l'inspection sur le terrain."""
+        self.ensure_one()
+        self.inspector_id=self.env.user.id
+        # Valider si tous les champs requis pour l'inspection sont remplis
+        if self.result != 'favorable':
+            raise ValidationError("La demande ne peut être validée qu'avec un avis favorable.")
+        if not self.inspection_date or not self.inspection_report:
+            raise ValidationError("Veuillez remplir la date, le rapport et l'agent d'inspection.")
+
+        self.state = 'signed'
+        self.message_post(body="L'inspection sur le terrain est terminée ")
+
+
+
+
+    def action_approve(self):
+        """Action finale pour approuver et générer le certificat."""
+        self.ensure_one()
+        # Mettre à jour l'état et les informations de signature
         self.state = 'approved'
-        self.deeper_check_date = fields.Datetime.now()
-        self.deeper_checker_id = self.env.user.id
-        self.message_post(
-            body="Vérification approfondie validée avec un avis favorable. La carte est prête à être délivrée.")
+        self.signature_date = fields.Date.today()
+        self.signed_by_id = self.env.user.id
+
+        # Le certificat est prêt à être généré.
+        # La génération sera déclenchée par le bouton de téléchargement.
+
+        self.message_post(body="Le certificat a été approuvé et signé. Il est prêt pour le téléchargement.")
+
+    def action_print_certificate_ct(self):
+        """Action pour imprimer le certificat."""
+        # Générer un nom de fichier unique avec un horodatage
+        now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        report_name = f'Certificat_Sanitaire_{self.name}_{now}.pdf'
+        report_action= self.env.ref('patnuc_minepia_carte_transhumance.action_report_carte_transhumance').report_action(self)
+        report_action['name'] = report_name
+        return report_action
+
 
 

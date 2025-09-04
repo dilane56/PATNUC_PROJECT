@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_carte_transhumance" model="ir.actions.report">
+            <field name="name">Carte de Transhumance</field>
+            <field name="model">carte.transhumance</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">patnuc_minepia_carte_transhumance.report_carte_transhumance_template</field>
+            <field name="report_file">patnuc_minepia_carte_transhumance.report_carte_transhumance_template</field>
+            <field name="print_report_name">'Carte_Transhumance_%s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_carte_transhumance"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <template id="report_carte_transhumance_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2 class="text-center">Carte de Transhumance</h2>
+                            <div class="row mt32 mb32">
+                                <div class="col-6">
+                                    <strong>Numéro :</strong> <span t-field="doc.name"/>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <strong>Date de délivrance :</strong> <span t-field="doc.signature_date" t-options='{"widget": "date"}'/>
+                                </div>
+                            </div>
+                            <p>
+                                Ce document atteste que le troupeau de <strong t-field="doc.initiateur_id.name"/> est autorisé à transhumer vers <strong t-field="doc.destination"/>.
+                            </p>
+                            <div class="row mt-5">
+                                <div class="col-6">
+                                    <strong>Signé par :</strong> <span t-field="doc.signed_by_id.name"/>
+                                    <p>Délégué Régional / Chef de Service Régional</p>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <t t-if="doc.signed_by_signature">
+                                        <img t-attf-src="data:image/png;base64,{{doc.signed_by_signature}}" style="max-height: 100px;"/>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

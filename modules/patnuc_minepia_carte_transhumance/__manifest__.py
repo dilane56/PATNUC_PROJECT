@@ -17,6 +17,7 @@
         'security/ir.model.access.csv',
         'views/carte_reject_wizard_views.xml',
         'data/carte_trans_document_type.xml',
-        'views/carte_tanshumance_views.xml'  # Corrected typo here
+        'reports/carte_transhumance_report.xml',
+        'views/carte_tanshumance_views.xml'
     ],
 }

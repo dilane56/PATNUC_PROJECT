@@ -18,10 +18,14 @@
 
                         <button name="action_submit" type="object" string="Soumettre" invisible="state != 'draft'" class="oe_highlight"/>
                         <button name="action_administrative_check_ok" type="object" string="Valider la vérification" invisible="state != 'administrative_check'" class="oe_highlight" groups="patnuc_minepia_carte_transhumance.group_agent_service_regional_paturage"/>
-                        <button name="action_deeper_check_ok" type="object" string="Approuver la Carte" invisible="state != 'deeper_check' or deeper_check_result != 'favorable'" groups="patnuc_minepia_carte_transhumance.group_agent_service_regional_paturage" class="oe_highlight"/>
+                        <button name="action_complete_inspection" type="object" string="Valider l'inspection" invisible="state != 'inspection'" class="oe_highlight" groups="patnuc_minepia_carte_transhumance.group_inspecteur_sanitaire_ct"/>
+
+
+                        <button name="action_approve" type="object" string="Approuver et signer" invisible="state != 'signed'" class="oe_highlight"/>
+                        <button name="action_print_certificate_ct" string="Imprimer Certificat" type="object" invisible="state != 'approved'" class="oe_highlight"/>
 
                         <button name="%(action_carte_rejet_wizard)d" string="Rejeter" type="action" invisible="state in ('draft','rejected','approved')"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,administrative_check,deeper_check,approved"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,administrative_check,inspection,signed,approved"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -72,16 +76,28 @@
 
                             </page>
 
-                             <page string="Vérification Approfondie" invisible="state not in ('deeper_check', 'approved')" groups="patnuc_minepia_carte_transhumance.group_agent_service_regional_paturage">
+                             <page string="Rapport d'Inspection" invisible="state in ('draft','administrative_check')">
+                                <group>
+                                    <field name="inspector_id" readonly="1"/>
+                                    <field name="inspection_date"/>
+                                </group>
+                                <group string="Checklist de l'inspection">
+                                    <field name="animal_health_ok"/>
+                                    <field name="facilities_clean_ok"/>
+                                    <field name="vaccination_status_ok"/>
+                                    <field name="transport_ok"/>
+                                </group>
+                                 <group>
+                                     <field name="result"/>
+                                     <field name="inspection_report" placeholder="Saisissez le rapport de l'agent d'inspection ici..."/>
+                                     <field name="inspection_report_doc" />
+                                 </group>
+                            </page>
 
-                                    <group>
-                                        <field name="deeper_check_result" readonly="state != 'deeper_check'"/>
-                                    </group>
-                                    <group string="informations supplmentaires sur la verification">
-                                        <field name="deeper_checker_id" readonly="1"/>
-                                        <field name="deeper_check_date" readonly="1"/>
-                                    </group>
-
+                             <page string="Signature" invisible="state not in ('signed','approved')">
+                                  <group string="Signature de l'approbateur" >
+                                    <field name="signed_by_signature" widget="signature"/>
+                                  </group>
                             </page>
 
                             <page string="Détails du rejet" invisible="state != 'rejected'" >
