@@ -1,6 +1,6 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
-
+import datetime
 
 class LaissezPasserSanitaire(models.Model):
     _name = 'laissez.passer'
@@ -37,7 +37,7 @@ class LaissezPasserSanitaire(models.Model):
     cni_ok = fields.Boolean(string="CNI valide")
     recu_paiement_ok = fields.Boolean(string="Reçu de paiement valide")
 
-    administrative_check_comment = fields.Char(string="Commentaires de l'agent de verification admin")
+    administrative_check_comment = fields.Char(string="Commentaires de l'agent de verification")
     
     # Champ calculé pour la validation
     can_validate_admin = fields.Boolean(string="Peut valider", compute="_compute_can_validate_admin")
@@ -50,6 +50,14 @@ class LaissezPasserSanitaire(models.Model):
         ('unfavorable', ' Défavorable'),
     ], string="Avis sur la demande", required=False)
 
+    # Signature et délivrance
+    signature_date = fields.Date(string="Date de signature", readonly=True)
+    signed_by_id = fields.Many2one('res.users', string="Signé par", readonly=True)
+    certificate_file = fields.Binary(string="Fichier du certificat délivré", readonly=True, attachment=True)
+    certificate_filename = fields.Char(string="Nom du fichier")
+    # Champ pour la signature manuscrite
+    signed_by_signature = fields.Binary(string="Signature de l'approbateur", attachment=True)
+
     #Motif de rejet
     rejection_reason = fields.Text(string='Motif de rejet')
 
@@ -58,7 +66,8 @@ class LaissezPasserSanitaire(models.Model):
         ('draft', 'Brouillon'),
         ('administrative_control', 'Contrôle Administratif'),
         ('deeper_check', 'Vérification Approfondie'),
-        ('approved', 'Signature et delivrance'),
+        ('signed', 'Signature'),
+        ('approved', 'Certifié'),
         ('rejected', 'Rejetée'),
     ], string='Statut', default='draft', tracking=True)
 
@@ -102,15 +111,25 @@ class LaissezPasserSanitaire(models.Model):
         if self.deeper_check_result != 'favorable':
             raise ValidationError("La demande ne peut être validée qu'avec un avis favorable.")
 
-        self.state = 'approved'
+        self.state = 'signed'
         self.deeper_check_date = fields.Date.today()
         self.deeper_checker_id = self.env.user.id
         self.message_post(
             body="Vérification approfondie validée avec un avis favorable. La demande passe à l'approbation.")
 
-
-
     def action_approve(self):
-        """Action pour approuver et délivrer le laissez-passer."""
+        """Action finale pour approuver et générer le certificat."""
+        self.ensure_one()
+        # Mettre à jour l'état et les informations de signature
         self.state = 'approved'
-        self.message_post(body="Le laissez-passer a été approuvé et est en attente de signature par le delegue Régionale.")
+        self.signature_date = fields.Date.today()
+        self.signed_by_id = self.env.user.id
+
+        # Le certificat est prêt à être généré.
+        # La génération sera déclenchée par le bouton de téléchargement.
+
+        self.message_post(body="Le certificat a été approuvé et signé. Il est prêt pour le téléchargement.")
+
+    def action_print_certificate_lp(self):
+        """Action pour imprimer le certificat."""
+        return self.env.ref('patnuc_minepia_laisser_passer_sanitaire.action_report_laissez_passer').report_action(self)

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_laissez_passer" model="ir.actions.report">
+            <field name="name">Laissez-Passer Sanitaire</field>
+            <field name="model">laissez.passer</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">patnuc_minepia_laisser_passer_sanitaire.report_laissez_passer_template</field>
+            <field name="report_file">patnuc_minepia_laisser_passer_sanitaire.report_laissez_passer_template</field>
+            <field name="print_report_name">'Laissez-Passer_%s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_laissez_passer"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <template id="report_laissez_passer_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2 class="text-center">Laissez-Passer Sanitaire</h2>
+                            <div class="row mt32 mb32">
+                                <div class="col-6">
+                                    <strong>Numéro :</strong> <span t-field="doc.name"/>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <strong>Date de délivrance :</strong> <span t-field="doc.signature_date" t-options='{"widget": "date"}'/>
+                                </div>
+                            </div>
+                            <p>
+                                Ce document autorise le transport de...
+                            </p>
+                             <div class="row mt-5">
+                                <div class="col-6">
+                                    <strong>Signé par :</strong> <span t-field="doc.signed_by_id.name"/>
+                                    <p>Délégué Régional / Chef de Service Régional</p>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <t t-if="doc.signed_by_signature">
+                                        <img t-attf-src="data:image/png;base64,{{doc.signed_by_signature}}" style="max-height: 100px;"/>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
