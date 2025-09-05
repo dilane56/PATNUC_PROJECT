@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="fishing_permit_form_view" model="ir.ui.view">
+            <field name="name">fishing.permit.form</field>
+            <field name="model">fishing.permit</field>
+            <field name="arch" type="xml">
+                <form string="Demande de Permis de Pêche">
+                    <header>
+                        <button name="action_submit" type="object" string="Soumettre la demande"
+                                invisible="state != 'draft'" class="oe_highlight"/>
+                        <button name="action_admin_approve" type="object" string="Valider le contrôle administratif"
+                                invisible="state != 'admin_check' or not stamped_request_ok or not photos_ok"
+                                class="oe_highlight"/>
+                        <button name="action_deep_analysis_approve" type="object" string="Valider l'analyse et approuver"
+                                invisible="state != 'deep_analysis' or deep_analysis_result != 'favorable'"
+                                class="oe_highlight"/>
+                        <button name="action_reject" type="object" string="Rejeter"
+                                invisible="state in ('approved', 'rejected')"/>
+                        <button name="action_print_permit" type="object" string="Imprimer le permis"
+                                invisible="state != 'approved'"/>
+                        <button name="action_back_to_previous_state" type="object" string="Retour état précédent"
+                                invisible="state in ('draft', 'rejected','approved')" class="btn-secondary"/>
+                        <field name="state" widget="statusbar"
+                                statusbar_visible="draft,admin_check,deep_analysis,approved"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="applicant_id"/>
+                                <field name="date_demande"/>
+                                <field name="duree_traitement"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Pièces à fournir">
+                                <group>
+                                    <field name="stamped_request" filename="stamped_request_filename" readonly="state !='draft'"/>
+                                    <field name="photos" filename="photos_filename" readonly="state !='draft'"/>
+                                    <field name="fishing_gear_info" filename="fishing_gear_info_filename" readonly="state !='draft'"/>
+                                    <field name="boat_info" filename="boat_info_filename" readonly="state !='draft'"/>
+                                </group>
+                            </page>
+                            <page string="Contrôle Administratif" invisible="state == 'draft'">
+                                 <group >
+                                    <field name="stamped_request_ok" readonly="state != 'admin_check'"/>
+                                    <field name="photos_ok" readonly="state != 'admin_check'"/>
+                                    <field name="fishing_gear_ok" readonly="state != 'admin_check'"/>
+                                    <field name="boat_info_ok" readonly="state != 'admin_check'"/>
+                                </group>
+                                <group string="informations supplementaire sur la verification">
+                                    <field name="admin_check_comment" readonly="state != 'admin_check'"/>
+                                    <field name="admin_check_date" readonly="1"/>
+                                    <field name="admin_checker_id" readonly="1"/>
+                                </group>
+
+                            </page>
+                            <page string="Analyse Approfondie"
+                                  invisible="state in ('draft', 'admin_check')">
+                                <group>
+                                    <field name="deep_analysis_result" readonly="state != 'deep_analysis'"/>
+                                    <field name="deep_analysis_comment"  readonly="state != 'deep_analysis'"/>
+                                    <field name="rapport_analyse"  readonly="state != 'deep_analysis'"/>
+                                </group>
+                            </page>
+                            <page string="Délivrance et Signature"
+                                  invisible="state != 'approved'">
+                                <group>
+                                    <field name="signed_by_id"/>
+                                    <field name="signature_date"/>
+                                </group>
+                                <field name="signed_by_signature" widget="signature"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+        <record id="fishing_permit_tree_view" model="ir.ui.view">
+            <field name="name">fishing.permit.tree</field>
+            <field name="model">fishing.permit</field>
+            <field name="arch" type="xml">
+                <tree string="Demandes de Permis de Pêche">
+                    <field name="name"/>
+                    <field name="applicant_id"/>
+                    <field name="date_demande"/>
+                    <field name="state" widget="badge" decoration-success="state == 'approved'"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="fishing_permit_action" model="ir.actions.act_window">
+            <field name="name">Permis de Pêche Artisanale</field>
+            <field name="res_model">fishing.permit</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_fishing_permit_root" name="Permis de Pêche" sequence="60"/>
+        <menuitem id="menu_fishing_permit_requests" name="Demandes de Permis" parent="menu_fishing_permit_root" action="fishing_permit_action" sequence="10"/>
+        
+    </data>
+</odoo>

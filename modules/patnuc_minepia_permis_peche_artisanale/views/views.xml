@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="patnuc_minepia_permis_peche_artisanale.list">
+      <field name="name">patnuc_minepia_permis_peche_artisanale list</field>
+      <field name="model">patnuc_minepia_permis_peche_artisanale.patnuc_minepia_permis_peche_artisanale</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="patnuc_minepia_permis_peche_artisanale.action_window">
+      <field name="name">patnuc_minepia_permis_peche_artisanale window</field>
+      <field name="res_model">patnuc_minepia_permis_peche_artisanale.patnuc_minepia_permis_peche_artisanale</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="patnuc_minepia_permis_peche_artisanale.action_server">
+      <field name="name">patnuc_minepia_permis_peche_artisanale server</field>
+      <field name="model_id" ref="model_patnuc_minepia_permis_peche_artisanale_patnuc_minepia_permis_peche_artisanale"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="patnuc_minepia_permis_peche_artisanale" id="patnuc_minepia_permis_peche_artisanale.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="patnuc_minepia_permis_peche_artisanale.menu_1" parent="patnuc_minepia_permis_peche_artisanale.menu_root"/>
+    <menuitem name="Menu 2" id="patnuc_minepia_permis_peche_artisanale.menu_2" parent="patnuc_minepia_permis_peche_artisanale.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="patnuc_minepia_permis_peche_artisanale.menu_1_list" parent="patnuc_minepia_permis_peche_artisanale.menu_1"
+              action="patnuc_minepia_permis_peche_artisanale.action_window"/>
+    <menuitem name="Server to list" id="patnuc_minepia_permis_peche_artisanale" parent="patnuc_minepia_permis_peche_artisanale.menu_2"
+              action="patnuc_minepia_permis_peche_artisanale.action_server"/>
+-->
+  </data>
+</odoo>

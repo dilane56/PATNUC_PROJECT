@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_fishing_permit" model="ir.actions.report">
+            <field name="name">Permis de Pêche Artisanale</field>
+            <field name="model">fishing.permit</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">patnuc_minepia_permis_peche_artisanale.fishing_permit_template</field>
+            <field name="report_file">patnuc_minepia_permis_peche_artisanale.fishing_permit_template</field>
+            <field name="binding_model_id" ref="model_fishing_permit"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <template id="fishing_permit_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <div class="page">
+                        <div class="text-center">
+                            <h2>PERMIS DE PÊCHE ARTISANALE</h2>
+                            <h3 t-field="doc.name"/>
+                        </div>
+                        <br/>
+                        <div>
+                            <strong>Demandeur:</strong> <span t-field="doc.applicant_id.name"/>
+                        </div>
+                        <div>
+                            <strong>Date de demande:</strong> <span t-field="doc.date_demande"/>
+                        </div>
+                        <div>
+                            <strong>Date de signature:</strong> <span t-field="doc.signature_date"/>
+                        </div>
+                        <br/>
+                        <div>
+                            <p>Ce permis autorise le porteur à exercer la pêche artisanale conformément à la réglementation en vigueur.</p>
+                        </div>
+                        <br/>
+                        <div class="text-right">
+                            <strong>Signé par:</strong> <span t-field="doc.signed_by_id.name"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

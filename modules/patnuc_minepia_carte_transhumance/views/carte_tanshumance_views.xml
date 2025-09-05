@@ -79,18 +79,18 @@
                              <page string="Rapport d'Inspection" invisible="state in ('draft','administrative_check')">
                                 <group>
                                     <field name="inspector_id" readonly="1"/>
-                                    <field name="inspection_date"/>
+                                    <field name="inspection_date" readonly="state !='inspection'"/>
                                 </group>
-                                <group string="Checklist de l'inspection">
-                                    <field name="animal_health_ok"/>
-                                    <field name="facilities_clean_ok"/>
-                                    <field name="vaccination_status_ok"/>
-                                    <field name="transport_ok"/>
+                                <group string="Checklist de l'inspection" >
+                                    <field name="animal_health_ok" readonly="state !='inspection'"/>
+                                    <field name="facilities_clean_ok" readonly="state !='inspection'"/>
+                                    <field name="vaccination_status_ok" readonly="state !='inspection'"/>
+                                    <field name="transport_ok" readonly="state !='inspection'"/>
                                 </group>
                                  <group>
-                                     <field name="result"/>
-                                     <field name="inspection_report" placeholder="Saisissez le rapport de l'agent d'inspection ici..."/>
-                                     <field name="inspection_report_doc" />
+                                     <field name="result" readonly="state !='inspection'"/>
+                                     <field name="inspection_report" placeholder="Saisissez le rapport de l'agent d'inspection ici..." readonly="state !='inspection'"/>
+                                     <field name="inspection_report_doc" readonly="state !='inspection'"/>
                                  </group>
                             </page>
 

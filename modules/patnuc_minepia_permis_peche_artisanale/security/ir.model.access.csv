@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_fishing_permit_user,fishing.permit user,model_fishing_permit,base.group_user,1,1,1,1
+access_fishing_permit_admin_checker,fishing.permit admin checker,model_fishing_permit,patnuc_minepia_permis_peche_artisanale.group_agent_service_regionale_peche,1,0,1,0
+access_fishing_permit_analyst,fishing.permit analyst,model_fishing_permit,patnuc_minepia_permis_peche_artisanale.group_fishing_permit_manager,1,0,1,0

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+     <!-- Définition d'une nouvelle catégorie pour nos groupes -->
+    <record id="module_category_procedures_minepia_permis_peche" model="ir.module.category">
+        <field name="name">Service régional des Pêches, de l’Aquaculture et des Industries Halieutiques</field>
+        <field name="description">Groupes liés aux  agent gerant la procedure d'obtention d'un permis de peche artisanale</field>
+        <field name="sequence">10</field>
+    </record>
+      <!-- Groupe Agent du minepia -->
+    <record id="group_agent_service_regionale_peche" model="res.groups">
+        <field name="name">Agent des Services Regionales des pêche</field>
+        <field name="category_id" ref="module_category_procedures_minepia_permis_peche"/>
+    </record>
+
+     <record id="group_fishing_permit_manager" model="res.groups">
+            <field name="name">Permis de Pêche / Délégué Régional</field>
+            <field name="comment">Peut approuver et signer les permis.</field>
+            <field name="category_id" ref="module_category_procedures_minepia_permis_peche"/>
+        </record>
+
+</odoo>

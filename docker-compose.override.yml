@@ -18,6 +18,7 @@ services:
     #command: odoo scaffold patnuc_minepia_certificat_sanitaire /mnt/extra-addons/
     #command: odoo scaffold patnuc_minepia_carte_transhumance /mnt/extra-addons/
     #command: odoo scaffold patnuc_minepia_laisser_passer_sanitaire /mnt/extra-addons/
+    #command: odoo scaffold patnuc_minepia_permis_peche_artisanale /mnt/extra-addons/
 
     
     networks:
