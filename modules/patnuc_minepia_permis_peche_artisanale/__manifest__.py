@@ -26,6 +26,7 @@ Long description of module's purpose
         'security/fishing_permit_security.xml',
         'security/ir.model.access.csv',
         'reports/fishing_permit_report.xml',
+        'views/fishing_permit_reject_views.xml',
         'views/views.xml',
         'views/fishing_permit_views.xml',
     ],

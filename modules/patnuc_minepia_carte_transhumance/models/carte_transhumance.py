@@ -18,19 +18,44 @@ class CarteTranshumance(models.Model):
     proprietaire = fields.Char(string='Nom complet du Propriétaire', required=True)
     destination = fields.Char(string='Destination', required=True)
 
-    # Document requis
-    document_ids = fields.One2many("carte.document", "request_id", string="Documents")
-    required_missing_count = fields.Integer(string="Docs requis manquants", compute="_compute_required_missing",
-                                            store=False)
+    # ANCIENNE APPROCHE - Document requis avec modèle séparé (commenté temporairement)
+    # document_ids = fields.One2many("carte.document", "request_id", string="Documents")
+    # required_missing_count = fields.Integer(string="Docs requis manquants", compute="_compute_required_missing", store=False)
+    
+    # NOUVELLE APPROCHE - Champs directs pour les documents
+    demande_timbree = fields.Binary(string="Demande timbrée au tarif en vigueur", attachment=True, required=True)
+    photocopie_cni_proprietaire = fields.Binary(string="Photocopie CNI Propriétaire", attachment=True, required=True)
+    photocopie_cni_berger = fields.Binary(string="Photocopie CNI Berger", attachment=True, required=True)
+    certificat_sanitaire = fields.Binary(string="Certificat Sanitaire", attachment=True, required=True)
+    laisser_passer_sanitaire = fields.Binary(string="Laisser Passer Sanitaire", attachment=True, required=True)
+    recu_paiement_taxe = fields.Binary(string="Reçu de paiement de la taxe d'inspection sanitaire", attachment=True, required=True)
 
     # Ajout des champs pour la vérification administrative
     administrative_check_date = fields.Datetime(string="Date de vérification administrative", readonly=True)
     administrative_checker_id = fields.Many2one('res.users', string="Agent vérificateur", readonly=True)
     administrative_check_comment = fields.Char(string="Commentaires de l'agent")
 
-    # Champ pour la validation globale
+    # ANCIENNE APPROCHE - Validation globale basée sur les documents (commenté temporairement)
+    # is_admin_check_ok = fields.Boolean(string="Vérification administrative validée",
+    #                                    compute="_compute_is_admin_check_ok", store=True)
+    
+    # NOUVELLE APPROCHE - Validation des documents individuels
+    demande_timbree_ok = fields.Boolean(string="Demande timbrée validée")
+    demande_timbree_filename = fields.Char(string="Nom du fichier de la demande timbrée")
+    photocopie_cni_proprietaire_ok = fields.Boolean(string="Photocopie CNI Propriétaire validée")
+    photocopie_cni_proprietaire_filename = fields.Char(string="Nom du fichier de la photocopie CNI Propriétaire")
+    photocopie_cni_berger_ok = fields.Boolean(string="Photocopie CNI Berger validée")
+    photocopie_cni_berger_filename = fields.Char(string="Nom du fichier de la photocopie CNI Berger")
+    certificat_sanitaire_ok = fields.Boolean(string="Certificat Sanitaire validé")
+    certificat_sanitaire_filename = fields.Char(string="Nom du fichier du certificat sanitaire")
+    laisser_passer_sanitaire_ok = fields.Boolean(string="Laisser Passer Sanitaire validé")
+    laisser_passer_sanitaire_filename = fields.Char(string="Nom du fichier du laisser passer sanitaire")
+    recu_paiement_taxe_ok = fields.Boolean(string="Reçu de paiement validé")
+    recu_paiement_taxe_filename = fields.Char(string="Nom du fichier du reçu de paiement")
+    
+    # Champ calculé pour la validation globale
     is_admin_check_ok = fields.Boolean(string="Vérification administrative validée",
-                                       compute="_compute_is_admin_check_ok", store=True)
+                                       compute="_compute_is_admin_check_ok_new", store=True)
 
 
     # Inspection sanitaire
@@ -77,11 +102,10 @@ class CarteTranshumance(models.Model):
 
 
     state = fields.Selection([
-        ('draft', 'Brouillon'),
-        ('administrative_check', 'Vérification Administrative'),
-        ('inspection', 'Inspection Sanitaire'),
-        ('signed', 'Signature'),
-        ('approved', 'Approuvée'),
+        ('draft', 'Depot dossier'),
+        ('admin_check', 'Contrôle Administratif'),
+        ('deep_check', 'Inspection Sanitaire'),
+        ('approved', 'Signature et delivrance'),
         ('rejected', 'Rejetée'),
     ], string='Statut', default='draft', tracking=True)
 
@@ -91,25 +115,35 @@ class CarteTranshumance(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('carte.transhumance') or 'Nouveau'
         return super(CarteTranshumance, self).create(vals)
 
-        # Comptage des documents obligatoires manquants
+    # ANCIENNE APPROCHE - Comptage des documents obligatoires manquants (commenté temporairement)
+    # def _compute_required_missing(self):
+    #     for rec in self:
+    #         required_types = self.env["carte.document.type"] .search([("required", "=", True)])
+    #         provided_type_ids = set(rec.document_ids.mapped("type_id").ids)
+    #         missing = required_types.filtered(lambda dt: dt.id not in provided_type_ids)
+    #         rec.required_missing_count = len(missing)
 
-    def _compute_required_missing(self):
+    # @api.depends("document_ids.is_valid")
+    # def _compute_is_admin_check_ok(self):
+    #     """Vérifie si tous les documents requis et fournis sont valides."""
+    #     for rec in self:
+    #         # On vérifie que le document est fourni ET qu'il a été validé par l'agent
+    #         rec.is_admin_check_ok = all(doc.is_valid for doc in rec.document_ids.filtered(lambda d: d.provided))
+    
+    # NOUVELLE APPROCHE - Validation basée sur les champs individuels
+    @api.depends("demande_timbree_ok", "photocopie_cni_proprietaire_ok", "photocopie_cni_berger_ok", 
+                 "certificat_sanitaire_ok", "laisser_passer_sanitaire_ok", "recu_paiement_taxe_ok")
+    def _compute_is_admin_check_ok_new(self):
+        """Vérifie si tous les documents requis sont validés."""
         for rec in self:
-            required_types = self.env["carte.document.type"] .search([("required", "=", True)])
-            provided_type_ids = set(rec.document_ids.mapped("type_id").ids)
-            missing = required_types.filtered(lambda dt: dt.id not in provided_type_ids)
-            rec.required_missing_count = len(missing)
-
-
-
-    @api.depends("document_ids.is_valid")
-    def _compute_is_admin_check_ok(self):
-        """Vérifie si tous les documents requis et fournis sont valides."""
-        for rec in self:
-            # On vérifie que le document est fourni ET qu'il a été validé par l'agent
-            rec.is_admin_check_ok = all(doc.is_valid for doc in rec.document_ids.filtered(lambda d: d.provided))
-            # On pourrait aussi ajouter une contrainte pour s'assurer que tous les documents requis sont présents
-            # et que required_missing_count == 0. C'est déjà géré par la soumission, mais c'est une bonne pratique.
+            rec.is_admin_check_ok = all([
+                rec.demande_timbree_ok,
+                rec.photocopie_cni_proprietaire_ok,
+                rec.photocopie_cni_berger_ok,
+                rec.certificat_sanitaire_ok,
+                rec.laisser_passer_sanitaire_ok,
+                rec.recu_paiement_taxe_ok
+            ])
 
     def action_administrative_check_ok(self):
         """Action pour valider la vérification administrative et passer à l'étape suivante."""
@@ -121,7 +155,7 @@ class CarteTranshumance(models.Model):
             raise ValidationError("Veuillez valider tous les documents fournis avant de continuer.")
 
         self.write({
-            'state': 'inspection',
+            'state': 'deep_check',
             'administrative_check_date': fields.Datetime.now(),
             'administrative_checker_id': self.env.user.id,
         })
@@ -131,14 +165,33 @@ class CarteTranshumance(models.Model):
 
     def action_submit(self):
         """Action pour soumettre la demande."""
-        if self.required_missing_count > 0:
-            required_types = self.env["carte.document.type"].search([("required", "=", True)])
-            provided_type_ids = set(self.document_ids.mapped("type_id").ids)
-            missing_docs = required_types.filtered(lambda dt: dt.id not in provided_type_ids)
-            missing_names = missing_docs.mapped('name')
-            raise ValidationError("Impossible de soumettre la demande. Documents manquants :\n• %s" % '\n• '.join(missing_names))
+        # ANCIENNE APPROCHE - Vérification avec modèle document (commenté temporairement)
+        # if self.required_missing_count > 0:
+        #     required_types = self.env["carte.document.type"].search([("required", "=", True)])
+        #     provided_type_ids = set(self.document_ids.mapped("type_id").ids)
+        #     missing_docs = required_types.filtered(lambda dt: dt.id not in provided_type_ids)
+        #     missing_names = missing_docs.mapped('name')
+        #     raise ValidationError("Impossible de soumettre la demande. Documents manquants :\n• %s" % '\n• '.join(missing_names))
         
-        self.state = 'administrative_check'
+        # NOUVELLE APPROCHE - Vérification des champs directs
+        missing_docs = []
+        if not self.demande_timbree:
+            missing_docs.append("Demande timbrée au tarif en vigueur")
+        if not self.photocopie_cni_proprietaire:
+            missing_docs.append("Photocopie CNI Propriétaire")
+        if not self.photocopie_cni_berger:
+            missing_docs.append("Photocopie CNI Berger")
+        if not self.certificat_sanitaire:
+            missing_docs.append("Certificat Sanitaire")
+        if not self.laisser_passer_sanitaire:
+            missing_docs.append("Laisser Passer Sanitaire")
+        if not self.recu_paiement_taxe:
+            missing_docs.append("Reçu de paiement de la taxe d'inspection sanitaire")
+            
+        if missing_docs:
+            raise ValidationError("Impossible de soumettre la demande. Documents manquants :\n• %s" % '\n• '.join(missing_docs))
+        
+        self.state = 'admin_check'
         self.message_post(body="La demande de carte de transhumance a été soumise et la verification administrative est en attente.")
 
 
@@ -153,33 +206,43 @@ class CarteTranshumance(models.Model):
         if not self.inspection_date or not self.inspection_report:
             raise ValidationError("Veuillez remplir la date, le rapport et l'agent d'inspection.")
 
-        self.state = 'signed'
+        self.state = 'approved'
         self.message_post(body="L'inspection sur le terrain est terminée ")
 
 
 
 
-    def action_approve(self):
-        """Action finale pour approuver et générer le certificat."""
+
+
+    def action_print_certificate_ct(self):
+        """Action pour imprimer le certificat."""
         self.ensure_one()
         # Mettre à jour l'état et les informations de signature
         self.state = 'approved'
         self.signature_date = fields.Date.today()
         self.signed_by_id = self.env.user.id
-
-        # Le certificat est prêt à être généré.
-        # La génération sera déclenchée par le bouton de téléchargement.
-
-        self.message_post(body="Le certificat a été approuvé et signé. Il est prêt pour le téléchargement.")
-
-    def action_print_certificate_ct(self):
-        """Action pour imprimer le certificat."""
         # Générer un nom de fichier unique avec un horodatage
         now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         report_name = f'Certificat_Sanitaire_{self.name}_{now}.pdf'
         report_action= self.env.ref('patnuc_minepia_carte_transhumance.action_report_carte_transhumance').report_action(self)
         report_action['name'] = report_name
         return report_action
+
+    def action_back_to_previous_state(self):
+        """Retourner à l'état précédent"""
+        state_transitions = {
+            'admin_check': 'draft',
+            'deep_check': 'admin_check',
+            'approved': 'deep_analysis',
+        }
+
+        if self.state in state_transitions:
+            previous_state = state_transitions[self.state]
+            self.state = previous_state
+            self.message_post(
+                body=f"Retour à l'état précédent : {dict(self._fields['state'].selection)[previous_state]}")
+        else:
+            raise ValidationError("Impossible de retourner à l'état précédent depuis cet état.")
 
 
 

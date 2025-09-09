@@ -16,7 +16,7 @@
         'security/carte_transhumance_security.xml',
         'security/ir.model.access.csv',
         'views/carte_reject_wizard_views.xml',
-        'data/carte_trans_document_type.xml',
+        # 'data/carte_trans_document_type.xml',  # ANCIENNE APPROCHE - Commenté temporairement
         'reports/carte_transhumance_report.xml',
         'views/carte_tanshumance_views.xml'
     ],

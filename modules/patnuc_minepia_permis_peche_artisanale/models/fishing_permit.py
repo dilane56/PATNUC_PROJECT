@@ -11,6 +11,10 @@ class FishingPermit(models.Model):
     applicant_id = fields.Many2one('res.partner', string='Demandeur', required=True, tracking=True)
     date_demande = fields.Date(string='Date de la demande', default=fields.Date.today(), readonly=True, tracking=True)
     duree_traitement = fields.Integer(string='Durée de traitement (en jours)',default=14,readonly=True)
+    type_permit = fields.Selection([
+        ('continental', 'Continental'),
+        ('maritime', 'Maritime')
+    ], string='Type de permis', required=True, tracking=True)
 
     # Pièces à fournir
     stamped_request = fields.Binary(string="Demande timbrée", attachment=True, required=True)
@@ -92,9 +96,7 @@ class FishingPermit(models.Model):
         self.signature_date = fields.Date.today()
         self.message_post(body="Analyse approfondie validée. Le permis a été approuvé.")
 
-    def action_reject(self):
-        self.state = 'rejected'
-        self.message_post(body=f"La demande a été rejetée. Motif : {self.rejection_reason}")
+
 
     def action_print_permit(self):
         return self.env.ref('patnuc_minepia_permis_peche_artisanale.action_report_fishing_permit').report_action(self)

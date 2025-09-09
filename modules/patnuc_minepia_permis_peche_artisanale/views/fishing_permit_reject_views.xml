@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="fishing_permit_reject_wizard_form_view" model="ir.ui.view">
+            <field name="name">fishing.permit.reject.form</field>
+            <field name="model">fishing.permit.reject</field>
+            <field name="arch" type="xml">
+                <form string="Rejeter le permis de pêche">
+                    <group>
+                        <field name="rejection_reason" placeholder="Veuillez indiquer la raison du rejet..."/>
+                        <field name="permit_id" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button name="action_reject_permit" string="Confirmer le rejet" type="object" class="btn-primary"/>
+                        <button string="Annuler" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_fishing_permit_reject_wizard" model="ir.actions.act_window">
+            <field name="name">Rejeter le permis</field>
+            <field name="res_model">fishing.permit.reject</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'default_permit_id': active_id}</field>
+        </record>
+    </data>
+</odoo>

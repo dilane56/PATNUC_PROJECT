@@ -34,9 +34,11 @@
                             <p>Ce permis autorise le porteur à exercer la pêche artisanale conformément à la réglementation en vigueur.</p>
                         </div>
                         <br/>
-                        <div class="text-right">
-                            <strong>Signé par:</strong> <span t-field="doc.signed_by_id.name"/>
-                        </div>
+                         <div class="col-6 text-right">
+                                    <t t-if="doc.signed_by_signature">
+                                        <img t-attf-src="data:image/png;base64,{{doc.signed_by_signature}}" style="max-height: 100px;"/>
+                                    </t>
+                         </div>
                     </div>
                 </t>
             </t>

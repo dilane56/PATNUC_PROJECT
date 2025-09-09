@@ -25,9 +25,13 @@ class VeterinaryCertificate(models.Model):
 
     # Pièces à fournir
     declaration_denrees = fields.Binary(string="Déclaration des Animaux ou denréé d'origine animale ou halieutique", attachment=True)
+    declaration_denrees_filename = fields.Char(string="Nom du fichier de declaration des denrées")
     carnet_vaccination = fields.Binary(string='Carnet de vaccination', attachment=True)
+    carnet_vaccination_filename = fields.Char(string="Nom du fichier de carnet de vaccination")
     photocopie_cni = fields.Binary(string='Photocopie de CNI', attachment=True)
+    photocopie_cni_filename = fields.Char(string="Nom du fichier de photocopie de CNI")
     recu_paiement = fields.Binary(string='Reçu de paiement de la taxe', attachment=True)
+    recu_paiement_filename = fields.Char(string="Nom du fichier de reçu de paiement")
 
 
     # Motif de rejet
@@ -66,11 +70,10 @@ class VeterinaryCertificate(models.Model):
 
     # Workflow
     state = fields.Selection([
-        ('draft', 'Brouillon'),
-        ('administrative_control', 'Contrôle Administratif'),
-        ('deep_check', 'Verification Aprofondie'),
-        ('signed', 'Signature'),
-        ('approved', 'Approuvée'),
+        ('draft', 'Depot dossier'),
+        ('admin_check', 'Contrôle Administratif'),
+        ('deep_check', 'Inspection Sanitaire'),
+        ('approved', 'Signature et delivrance'),
         ('rejected', 'Rejetée'),
     ], string='Statut', default='draft')
 
@@ -87,7 +90,7 @@ class VeterinaryCertificate(models.Model):
 
     def action_submit(self):
         """Action pour soumettre la demande."""
-        self.state = 'administrative_control'
+        self.state = 'admin_check'
         self.message_post(body="La demande a été soumise et la verification administrative en attente")
 
     def _all_documents_validated(self):
@@ -115,30 +118,48 @@ class VeterinaryCertificate(models.Model):
         if self.deeper_check_result != 'favorable':
             raise ValidationError("La demande ne peut être validée qu'avec un avis favorable.")
 
-        self.state = 'signed'
+        self.state = 'approved'
         self.deep_check_date = fields.Date.today()
         self.deep_checker_id = self.env.user.id
         self.message_post(
             body="Vérification approfondie validée avec un avis favorable. La signature et délivrance en attente.")
 
     def action_approve(self):
+        pass
         """Action finale pour approuver et générer le certificat."""
+
+        # Le certificat est prêt à être généré.
+        # La génération sera déclenchée par le bouton de téléchargement.
+
+
+
+    def action_print_certificate(self):
+        """Action pour imprimer le certificat."""
         self.ensure_one()
         # Mettre à jour l'état et les informations de signature
         self.state = 'approved'
         self.signature_date = fields.Date.today()
         self.signed_by_id = self.env.user.id
-
-        # Le certificat est prêt à être généré.
-        # La génération sera déclenchée par le bouton de téléchargement.
-
         self.message_post(body="Le certificat a été approuvé et signé. Il est prêt pour le téléchargement.")
-
-    def action_print_certificate(self):
-        """Action pour imprimer le certificat."""
         # Générer un nom de fichier unique avec un horodatage
         now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         report_name = f'Certificat_Sanitaire_{self.name}_{now}.pdf'
         report_action= self.env.ref('patnuc_minepia_certificat_sanitaire.action_report_vet_certificate').report_action(self)
         report_action['name'] = report_name
         return report_action
+
+    def action_back_to_previous_state(self):
+        """Retourner à l'état précédent"""
+        state_transitions = {
+            'admin_check': 'draft',
+            'deep_check': 'admin_check',
+            'approved': 'deep_analysis',
+        }
+
+        if self.state in state_transitions:
+            previous_state = state_transitions[self.state]
+            self.state = previous_state
+            self.message_post(
+                body=f"Retour à l'état précédent : {dict(self._fields['state'].selection)[previous_state]}")
+        else:
+            raise ValidationError("Impossible de retourner à l'état précédent depuis cet état.")

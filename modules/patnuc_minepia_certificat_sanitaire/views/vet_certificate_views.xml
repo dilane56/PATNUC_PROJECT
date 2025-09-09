@@ -14,14 +14,14 @@
                 <form string="Certificat Sanitaire Vétérinaire">
                     <header>
                         <button name="action_submit" type="object" string="Soumettre" invisible="state != 'draft'" class="oe_highlight"/>
-                        <button name="action_technical_inspection" type="object" string="Valider la vérification et Lancer la verification approfondie" invisible="state !='administrative_control'" groups="patnuc_minepia_certificat_sanitaire.group_agent_service_veterinaire" class="oe_highlight" readonly="[('can_validate_admin', '=', False)]"/>
+                        <button name="action_technical_inspection" type="object" string="Passer a l'Inspection sanitaire" invisible="state !='admin_check'" groups="patnuc_minepia_certificat_sanitaire.group_agent_service_veterinaire" class="oe_highlight" readonly="[('can_validate_admin', '=', False)]"/>
                         <button name="action_deeper_check_ok" type="object" string="Approuver la demande" invisible="state != 'deep_check' or deeper_check_result != 'favorable'" groups="patnuc_minepia_certificat_sanitaire.group_agent_service_veterinaire" class="oe_highlight"/>
 
-                        <button name="action_approve" type="object" string="Approuver et signer" invisible="state != 'signed'" class="oe_highlight"/>
                         <button name="action_print_certificate" string="Imprimer Certificat" type="object" invisible="state != 'approved'" class="oe_highlight"/>
 
-                        <button name="%(action_vet_rejet_wizard)d" string="Rejeter" type="action" invisible="state in ('draft', 'rejected', 'approved','signed')" />
-                        <field name="state" widget="statusbar" statusbar_visible="draft,administrative_control,deep_check,signed,approved"/>
+                        <button name="action_back_to_previous_state" type="object" string="Retour état précédent" invisible="state in ('draft', 'rejected','approved')" class="btn-warning"/>
+                        <button name="%(patnuc_minepia_certificat_sanitaire.action_vet_rejet_wizard)d" string="Rejeter" type="action" class="bg-danger" invisible="state in ('draft', 'rejected', 'approved')" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,admin_check,deep_check,approved"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -40,23 +40,23 @@
                         <notebook>
                             <page string="Pièces à fournir">
                                 <group>
-                                    <field name="declaration_denrees" readonly="state != 'draft'"/>
-                                    <field name="photocopie_cni" readonly="state != 'draft'"/>
-                                    <field name="recu_paiement" readonly="state != 'draft'"/>
-                                    <field name="carnet_vaccination" invisible="type_demande != 'animaux'" readonly="state != 'draft'"/>
+                                    <field name="declaration_denrees"  readonly="state != 'draft'" filename="declaration_denrees_filename"/>
+                                    <field name="photocopie_cni" readonly="state != 'draft'" filename="photocopie_cni_filename"/>
+                                    <field name="recu_paiement" readonly="state != 'draft'" filename="recu_paiement_filename"/>
+                                    <field name="carnet_vaccination" invisible="type_demande != 'animaux'" readonly="state != 'draft'" filename="carnet_vaccination_filename"/>
 
                                 </group>
                             </page>
                             <page string="Verification administrative" invisible="state =='draft'" groups="patnuc_minepia_certificat_sanitaire.group_agent_service_veterinaire"  >
 
                                     <group>
-                                         <field name="declaration_ok" readonly="state !='administrative_control'"/>
-                                        <field name="certificat_sanitaire_ok" readonly="state !='administrative_control'"/>
-                                        <field name="cni_ok" readonly="state !='administrative_control'"/>
-                                        <field name="recu_paiement_ok" readonly="state !='administrative_control'"/>
+                                         <field name="declaration_ok" readonly="state !='admin_check'"/>
+                                        <field name="certificat_sanitaire_ok" readonly="state !='admin_check'"/>
+                                        <field name="cni_ok" readonly="state !='admin_check'"/>
+                                        <field name="recu_paiement_ok" readonly="state !='admin_check'"/>
                                     </group>
                                     <group string="Information supplementaire sur la verification">
-                                        <field name="administrative_check_comment"  readonly="state !='administrative_control'"/>
+                                        <field name="administrative_check_comment"  readonly="state !='admin_check'"/>
                                         <field name="administrative_check_date" readonly="1"/>
                                         <field name="administrative_checker_id" readonly="1"/>
                                     </group>
@@ -65,7 +65,7 @@
 
                             </page>
 
-                            <page string="Vérification Approfondie" invisible="state  in ('administrative_control','draft',)" groups="patnuc_minepia_certificat_sanitaire.group_agent_service_veterinaire">
+                            <page string="Vérification Approfondie" invisible="state  in ('admin_check','draft',)" groups="patnuc_minepia_certificat_sanitaire.group_agent_service_veterinaire">
 
                                     <group>
                                         <field name="deeper_check_result" readonly="state != 'deep_check'"/>
@@ -78,7 +78,7 @@
 
                             </page>
 
-                            <page string="Signature" invisible="state not in ('signed','approved')">
+                            <page string="Signature" invisible="state !='approved'">
                                   <group string="Signature de l'approbateur" >
                                     <field name="signed_by_signature" widget="signature"/>
                                   </group>

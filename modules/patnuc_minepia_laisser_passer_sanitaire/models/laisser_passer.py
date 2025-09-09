@@ -21,9 +21,13 @@ class LaissezPasserSanitaire(models.Model):
 
     # Pièces à fournir
     certificat_sanitaire = fields.Binary(string='Certificat Sanitaire Vétérinaire', attachment=True)
+    certificat_sanitaire_filename = fields.Char(string='Nom du fichier')
     photocopie_cni = fields.Binary(string='Photocopie de CNI', attachment=True)
+    photocopie_cni_filename = fields.Char(string='Nom du fichier')
     recu_paiement = fields.Binary(string='Reçu de paiement de la taxe', attachment=True)
+    recu_paiement_filename = fields.Char(string='Nom du fichier')
     declaration_denree = fields.Binary(string='Déclaration des animaux/denrées', required=True)
+    declaration_denree_filename = fields.Char(string='Nom du fichier')
 
     delai_imparti = fields.Integer(string='Délai de traitement (jours)', default=2, readonly=True)
 
@@ -63,11 +67,10 @@ class LaissezPasserSanitaire(models.Model):
 
     # Workflow
     state = fields.Selection([
-        ('draft', 'Brouillon'),
-        ('administrative_control', 'Contrôle Administratif'),
-        ('deeper_check', 'Vérification Approfondie'),
-        ('signed', 'Signature'),
-        ('approved', 'Certifié'),
+        ('draft', 'Depot dossier'),
+        ('admin_check', 'Contrôle Administratif'),
+        ('deep_check', 'Inspection Sanitaire'),
+        ('approved', 'Signature et delivrance'),
         ('rejected', 'Rejetée'),
     ], string='Statut', default='draft', tracking=True)
 
@@ -89,7 +92,7 @@ class LaissezPasserSanitaire(models.Model):
 
     def action_submit(self):
         """Action pour soumettre la demande."""
-        self.state = 'administrative_control'
+        self.state = 'admin_check'
         self.message_post(body="La demande de laissez-passer a et la verification administrative est en attente.")
 
 
@@ -97,10 +100,10 @@ class LaissezPasserSanitaire(models.Model):
         """Action pour valider la demande après vérification administrative."""
         if not self._all_documents_validated():
             from odoo.exceptions import ValidationError
-            raise ValidationError("Impossible de valider. Tous les documents doivent être vérifiés et approuvés.")
+            raise ValidationError("Impossible de valider. Tous les documents doivent être vérifiés  et un commentaire laisser.")
         
         self.ensure_one()
-        self.state = 'deeper_check'
+        self.state = 'deep_check'
         self.administrative_check_date = fields.Date.today()
         self.administrative_checker_id = self.env.user.id
         self.message_post(body="Vérification administrative effectuée et approuvée. Vérification approfondie en attente.")
@@ -111,7 +114,7 @@ class LaissezPasserSanitaire(models.Model):
         if self.deeper_check_result != 'favorable':
             raise ValidationError("La demande ne peut être validée qu'avec un avis favorable.")
 
-        self.state = 'signed'
+        self.state = 'approved'
         self.deeper_check_date = fields.Date.today()
         self.deeper_checker_id = self.env.user.id
         self.message_post(
@@ -131,5 +134,26 @@ class LaissezPasserSanitaire(models.Model):
         self.message_post(body="Le certificat a été approuvé et signé. Il est prêt pour le téléchargement.")
 
     def action_print_certificate_lp(self):
+
+        # Mettre à jour l'état et les informations de signature
+        self.ensure_one()
+        self.signature_date = fields.Date.today()
+        self.signed_by_id = self.env.user.id
         """Action pour imprimer le certificat."""
         return self.env.ref('patnuc_minepia_laisser_passer_sanitaire.action_report_laissez_passer').report_action(self)
+
+    def action_back_to_previous_state(self):
+        """Retourner à l'état précédent"""
+        state_transitions = {
+            'admin_check': 'draft',
+            'deep_check': 'admin_check',
+            'approved': 'deep_analysis',
+        }
+
+        if self.state in state_transitions:
+            previous_state = state_transitions[self.state]
+            self.state = previous_state
+            self.message_post(
+                body=f"Retour à l'état précédent : {dict(self._fields['state'].selection)[previous_state]}")
+        else:
+            raise ValidationError("Impossible de retourner à l'état précédent depuis cet état.")

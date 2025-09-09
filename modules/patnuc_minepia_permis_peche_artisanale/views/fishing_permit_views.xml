@@ -15,14 +15,14 @@
                         <button name="action_deep_analysis_approve" type="object" string="Valider l'analyse et approuver"
                                 invisible="state != 'deep_analysis' or deep_analysis_result != 'favorable'"
                                 class="oe_highlight"/>
-                        <button name="action_reject" type="object" string="Rejeter"
-                                invisible="state in ('approved', 'rejected')"/>
+
                         <button name="action_print_permit" type="object" string="Imprimer le permis"
                                 invisible="state != 'approved'"/>
                         <button name="action_back_to_previous_state" type="object" string="Retour état précédent"
                                 invisible="state in ('draft', 'rejected','approved')" class="btn-secondary"/>
-                        <field name="state" widget="statusbar"
-                                statusbar_visible="draft,admin_check,deep_analysis,approved"/>
+
+                        <button name="%(patnuc_minepia_permis_peche_artisanale.action_fishing_permit_reject_wizard)d" type="action" class="btn-danger" string="Rejeter" invisible="state in ('approved', 'rejected')"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,admin_check,deep_analysis,approved"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -35,6 +35,7 @@
                                 <field name="applicant_id"/>
                                 <field name="date_demande"/>
                                 <field name="duree_traitement"/>
+                                <field name="type_permit" />
                             </group>
                         </group>
                         <notebook>

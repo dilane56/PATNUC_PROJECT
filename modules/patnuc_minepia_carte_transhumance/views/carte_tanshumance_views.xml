@@ -17,15 +17,13 @@
                     <header>
 
                         <button name="action_submit" type="object" string="Soumettre" invisible="state != 'draft'" class="oe_highlight"/>
-                        <button name="action_administrative_check_ok" type="object" string="Valider la vérification" invisible="state != 'administrative_check'" class="oe_highlight" groups="patnuc_minepia_carte_transhumance.group_agent_service_regional_paturage"/>
-                        <button name="action_complete_inspection" type="object" string="Valider l'inspection" invisible="state != 'inspection'" class="oe_highlight" groups="patnuc_minepia_carte_transhumance.group_inspecteur_sanitaire_ct"/>
-
-
-                        <button name="action_approve" type="object" string="Approuver et signer" invisible="state != 'signed'" class="oe_highlight"/>
+                        <button name="action_administrative_check_ok" type="object" string="Valider la vérification" invisible="state != 'admin_check'" class="oe_highlight" groups="patnuc_minepia_carte_transhumance.group_agent_service_regional_paturage"/>
+                        <button name="action_complete_inspection" type="object" string="Valider l'inspection" invisible="state != 'deep_check'" class="oe_highlight" groups="patnuc_minepia_carte_transhumance.group_inspecteur_sanitaire_ct"/>
                         <button name="action_print_certificate_ct" string="Imprimer Certificat" type="object" invisible="state != 'approved'" class="oe_highlight"/>
 
-                        <button name="%(action_carte_rejet_wizard)d" string="Rejeter" type="action" invisible="state in ('draft','rejected','approved')"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,administrative_check,inspection,signed,approved"/>
+                        <button name="action_back_to_previous_state" type="object" string="Retour état précédent" invisible="state in ('draft', 'rejected','approved')" class="btn-warning"/>
+                        <button name="%(patnuc_minepia_carte_transhumance.action_carte_rejet_wizard)d" string="Rejeter" class="btn-danger" type="action" invisible="state in ('draft','rejected','approved')"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,admin_check,deep_check,approved"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -45,6 +43,7 @@
                         <notebook>
 
                             <page string="Pièces à fournir"  >
+                                    <!-- ANCIENNE APPROCHE - Modèle document séparé (commenté temporairement)
                                     <field name="document_ids" readonly="state !='draft'">
                                         <tree editable="bottom">
                                             <field name="type_id" />
@@ -53,11 +52,23 @@
                                         </tree>
                                     </field>
                                     <field name="required_missing_count" string="Documents requis manquants" readonly="1"/>
+                                    -->
+                                    
+                                    <!-- NOUVELLE APPROCHE - Champs directs -->
+                                    <group>
+                                        <field name="demande_timbree" filename="demande_timbree_filename" readonly="state != 'draft'"/>
+                                        <field name="photocopie_cni_proprietaire" filename="photocopie_cni_proprietaire_filename" readonly="state != 'draft'"/>
+                                        <field name="photocopie_cni_berger" filename="photocopie_cni_berger_filename" readonly="state != 'draft'"/>
+                                        <field name="certificat_sanitaire" filename="certificat_sanitaire_filename" readonly="state != 'draft'"/>
+                                        <field name="laisser_passer_sanitaire" filename="laisser_passer_sanitaire_filename" readonly="state != 'draft'"/>
+                                        <field name="recu_paiement_taxe" filename="recu_paiement_taxe_filename" readonly="state != 'draft'"/>
+                                    </group>
                             </page>
 
 
 
-                            <page string="Vérification administrative" invisible="state == 'draft'" readonly="state != 'administrative_check'" groups="patnuc_minepia_carte_transhumance.group_agent_service_regional_paturage">
+                            <page string="Vérification administrative" invisible="state == 'draft'" readonly="state != 'admin_check'" groups="patnuc_minepia_carte_transhumance.group_agent_service_regional_paturage">
+                                 <!-- ANCIENNE APPROCHE - Validation via modèle document (commenté temporairement)
                                  <field name="document_ids">
                                         <tree editable="bottom">
                                             <field name="type_id" readonly="1" />
@@ -66,7 +77,18 @@
                                         </tree>
                                     </field>
                                     <field name="required_missing_count" string="Documents requis manquants" readonly="1"/>
-                                    <field name="is_admin_check_ok" string="Vérification administrative validée" readonly="1"/>
+                                 -->
+                                 
+                                 <!-- NOUVELLE APPROCHE - Validation des champs directs -->
+                                 <group string="Validation des documents">
+                                     <field name="demande_timbree_ok" readonly="state != 'admin_check'"/>
+                                     <field name="photocopie_cni_proprietaire_ok" readonly="state != 'admin_check'"/>
+                                     <field name="photocopie_cni_berger_ok" readonly="state != 'admin_check'"/>
+                                     <field name="certificat_sanitaire_ok" readonly="state != 'admin_check'"/>
+                                     <field name="laisser_passer_sanitaire_ok" readonly="state != 'admin_check'"/>
+                                     <field name="recu_paiement_taxe_ok" readonly="state != 'admin_check'"/>
+                                 </group>
+                                 <field name="is_admin_check_ok" string="Vérification administrative validée" readonly="1"/>
 
                                 <group string="information complementaire sur la verification">
                                     <field name="administrative_check_comment"/>
@@ -76,25 +98,25 @@
 
                             </page>
 
-                             <page string="Rapport d'Inspection" invisible="state in ('draft','administrative_check')">
+                             <page string="Rapport d'Inspection" invisible="state in ('draft','admin_check')">
                                 <group>
                                     <field name="inspector_id" readonly="1"/>
-                                    <field name="inspection_date" readonly="state !='inspection'"/>
+                                    <field name="inspection_date" readonly="state !='deep_check'"/>
                                 </group>
                                 <group string="Checklist de l'inspection" >
-                                    <field name="animal_health_ok" readonly="state !='inspection'"/>
-                                    <field name="facilities_clean_ok" readonly="state !='inspection'"/>
-                                    <field name="vaccination_status_ok" readonly="state !='inspection'"/>
-                                    <field name="transport_ok" readonly="state !='inspection'"/>
+                                    <field name="animal_health_ok" readonly="state !='deep_check'"/>
+                                    <field name="facilities_clean_ok" readonly="state !='deep_check'"/>
+                                    <field name="vaccination_status_ok" readonly="state !='deep_check'"/>
+                                    <field name="transport_ok" readonly="state !='deep_check'"/>
                                 </group>
                                  <group>
-                                     <field name="result" readonly="state !='inspection'"/>
-                                     <field name="inspection_report" placeholder="Saisissez le rapport de l'agent d'inspection ici..." readonly="state !='inspection'"/>
-                                     <field name="inspection_report_doc" readonly="state !='inspection'"/>
+                                     <field name="result" readonly="state !='deep_check'"/>
+                                     <field name="inspection_report" placeholder="Saisissez le rapport de l'agent d'inspection ici..." readonly="state !='deep_check'"/>
+                                     <field name="inspection_report_doc" readonly="state !='deep_check'"/>
                                  </group>
                             </page>
 
-                             <page string="Signature" invisible="state not in ('signed','approved')">
+                             <page string="Signature" invisible="state !='approved'">
                                   <group string="Signature de l'approbateur" >
                                     <field name="signed_by_signature" widget="signature"/>
                                   </group>
